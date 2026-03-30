@@ -10,6 +10,15 @@ Android-App (APK): kontinuierliche, visuelle Numerische Rating-Skala (NRS) als P
 - iOS-Portierung soll langfristig möglich bleiben (KMP als Option)
 - Min SDK 26, Target/Compile SDK 36
 
+## Umgebungsvariablen
+
+| Variable       | Wert                      | Zweck                                                                                                            |
+| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `ANDROID_HOME` | `~/Android/Sdk`           | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle und `adb` finden darüber alle SDK-Komponenten. |
+| `JAVA_HOME`    | `/opt/android-studio/jbr` | JDK 21, das mit Android Studio gebundelt wird. Gradle nutzt es zum Kompilieren.                                  |
+
+Am besten in `~/.zshenv` oder `~/.zprofile` dauerhaft setzen.
+
 ## Build
 
 ```sh
@@ -17,6 +26,28 @@ export ANDROID_HOME=~/Android/Sdk
 export JAVA_HOME=/opt/android-studio/jbr
 ./gradlew assembleDebug
 ```
+
+## Emulator starten
+
+```sh
+QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd FlowScale -gpu auto &
+```
+
+`QT_QPA_PLATFORM=xcb` ist nötig, weil der Android-Emulator kein Wayland-Qt-Plugin mitbringt und über XWayland laufen muss.
+
+Warten bis gebootet, dann App installieren und starten:
+
+```sh
+$ANDROID_HOME/platform-tools/adb install app/build/outputs/apk/debug/app-debug.apk
+$ANDROID_HOME/platform-tools/adb shell am start -n com.flowscale.app/.MainActivity
+```
+
+## Physisches Gerät (Alternative zum Emulator)
+
+1. USB-Debugging auf dem Android-Gerät aktivieren (Einstellungen → Über das Telefon → 7× auf Build-Nummer tippen → Entwickleroptionen → USB-Debugging)
+2. Gerät per USB verbinden
+3. `adb devices` prüfen, ob das Gerät erkannt wird
+4. `adb install app/build/outputs/apk/debug/app-debug.apk`
 
 ## Konventionen
 
