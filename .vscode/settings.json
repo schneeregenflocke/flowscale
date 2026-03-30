@@ -1,5 +1,9 @@
 {
     "chat.tools.terminal.autoApprove": {
-        "/home/titan99/code/flowscale/gradlew": true
+        "/home/titan99/code/flowscale/gradlew": true,
+        "./gradlew": true,
+        "$ANDROID_HOME/platform-tools/adb": true,
+        "hyprctl": true,
+        "grim": true
     }
 }

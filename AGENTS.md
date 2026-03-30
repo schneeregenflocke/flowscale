@@ -49,6 +49,38 @@ $ANDROID_HOME/platform-tools/adb shell am start -n com.flowscale.app/.MainActivi
 3. `adb devices` prüfen, ob das Gerät erkannt wird
 4. `adb install app/build/outputs/apk/debug/app-debug.apk`
 
+## Screenshots per CLI (Hyprland + grim)
+
+Voraussetzungen: `grim` und `hyprctl` (Hyprland Compositor).
+
+Emulator-Fenster finden (JSON-Ausgabe, Klasse `Emulator`):
+
+```sh
+hyprctl -j clients | python3 -c "
+import json, sys
+for c in json.load(sys.stdin):
+    if c.get('class') == 'Emulator' and not c.get('floating'):
+        print(f\"at={c['at']}  size={c['size']}  title={c['title']}\")
+"
+```
+
+Screenshot der Region aufnehmen (`x,y WxH`):
+
+```sh
+grim -g 'X,Y WxH' screenshot.png
+```
+
+Beispiel mit den ermittelten Werten:
+
+```sh
+grim -g '3,38 794x859' emulator-screenshot.png
+```
+
+Weitere `grim`-Modi:
+
+- `grim screenshot.png` — ganzer Output
+- `grim -o DP-1 screenshot.png` — bestimmter Monitor
+
 ## Konventionen
 
 - Sprache im Code und in Commits: Englisch
