@@ -81,6 +81,22 @@ Weitere `grim`-Modi:
 - `grim screenshot.png` — ganzer Output
 - `grim -o DP-1 screenshot.png` — bestimmter Monitor
 
+Screenshots im Projektverzeichnis unter `screenshots/` speichern — das Verzeichnis ist in `.gitignore` ausgenommen, sodass `*.png` im restlichen Projekt später nutzbar bleibt:
+
+```sh
+grim -g 'X,Y WxH' screenshots/emulator-screenshot.png
+```
+
+## Roadmap
+
+Mögliche nächste Ziele (grobe Reihenfolge):
+
+1. **Persistenz** — Startwert und aktuellen Wert speichern (DataStore / Room), damit sie App-Neustarts überleben
+2. **Verlauf / Zeitstempel** — Jede Änderung mit Zeitstempel loggen (Kern des PROM-Konzepts)
+3. **Visuelle Skala** — Slider oder Balken-Visualisierung des aktuellen Werts zusätzlich zur Zahl
+4. **Export** — Daten als CSV/JSON exportieren
+5. **Einstellungen** — Schrittweite, Wertebereich, Sprache konfigurierbar machen
+
 ## Offene TODOs
 
 - R8/ProGuard für Release aktivieren (`isMinifyEnabled = true` + `proguard-rules.pro`), bevor die App veröffentlicht wird

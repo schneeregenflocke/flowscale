@@ -19,5 +19,5 @@ local.properties
 .DS_Store
 Thumbs.db
 
-# Screenshots
-*.png
+# Screenshots (Verzeichnis komplett ignoriert)
+screenshots/

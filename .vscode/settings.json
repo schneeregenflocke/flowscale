@@ -4,6 +4,16 @@
         "./gradlew": true,
         "$ANDROID_HOME/platform-tools/adb": true,
         "hyprctl": true,
-        "grim": true
+        "grim": true,
+        "~/Android/Sdk/platform-tools/adb": true,
+        "/^sleep 3 && hyprctl -j clients \\| python3 -c \"\nimport json, sys\nfor c in json\\.load\\(sys\\.stdin\\):\n    if c\\.get\\('class'\\) == 'Emulator' and not c\\.get\\('floating'\\):\n        at = c\\['at'\\]\n        size = c\\['size'\\]\n        print\\(f\\\\\"\\{at\\[0\\]\\},\\{at\\[1\\]\\} \\{size\\[0\\]\\}x\\{size\\[1\\]\\}\\\\\"\\)\n\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^sleep 2 && hyprctl -j clients \\| python3 -c 'import json,sys;\\[print\\(f\"\\{c\\[\"at\"\\]\\[0\\]\\},\\{c\\[\"at\"\\]\\[1\\]\\} \\{c\\[\"size\"\\]\\[0\\]\\}x\\{c\\[\"size\"\\]\\[1\\]\\}\"\\) for c in json\\.load\\(sys\\.stdin\\) if c\\.get\\(\"class\"\\)==\"Emulator\" and not c\\.get\\(\"floating\"\\)\\]'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "mkdir": true
     }
 }
