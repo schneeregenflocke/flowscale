@@ -22,3 +22,4 @@ export JAVA_HOME=/opt/android-studio/jbr
 
 - Sprache im Code und in Commits: Englisch
 - UI-Texte: Deutsch (Lokalisierung später)
+- Abhängigkeiten und SDK-Versionen: immer die aktuellste stabile Version verwenden; Versionen nie ohne Grund pinnen, Aktualisierbarkeit hat Vorrang
