@@ -1,0 +1,20 @@
+# Project-wide
+*.iml
+.idea/
+.gradle/
+build/
+out/
+local.properties
+
+# Android
+*.apk
+*.aar
+*.ap_
+*.dex
+
+# Kotlin
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
