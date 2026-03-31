@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.time.Instant
 
-private const val RECENT_WINDOW_MILLIS = 5L * 60 * 1_000
+private const val DEFAULT_WINDOW_MINUTES = 5
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -29,6 +29,13 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
 
+    private val _windowMinutes = MutableStateFlow(DEFAULT_WINDOW_MINUTES)
+    val windowMinutes: StateFlow<Int> = _windowMinutes
+
+    fun setWindowMinutes(minutes: Int) {
+        _windowMinutes.value = minutes
+    }
+
     val records = dao.getAll()
 
     private val ticker = flow {
@@ -39,9 +46,11 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    val recentRecords = ticker.flatMapLatest {
-        dao.getSince(Instant.now().toEpochMilli() - RECENT_WINDOW_MILLIS)
-    }
+    val recentRecords = kotlinx.coroutines.flow.combine(ticker, _windowMinutes) { _, minutes -> minutes }
+        .flatMapLatest { minutes ->
+            val windowMillis = minutes.toLong() * 60 * 1_000
+            dao.getSince(Instant.now().toEpochMilli() - windowMillis)
+        }
 
     private val _volumeKeysEnabled = MutableStateFlow(false)
     val volumeKeysEnabled: StateFlow<Boolean> = _volumeKeysEnabled

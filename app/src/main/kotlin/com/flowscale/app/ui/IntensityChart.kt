@@ -20,13 +20,14 @@ import com.flowscale.app.data.IntensityRecord
 
 private const val Y_MIN = 1.0
 private const val Y_MAX = 10.0
-private const val WINDOW_MILLIS = 5L * 60 * 1_000
 private const val POINT_RADIUS = 5f
 
 @Composable
 fun IntensityChart(
     records: List<IntensityRecord>,
     nowMillis: Long,
+    windowMillis: Long,
+    currentIntensity: Double,
     modifier: Modifier = Modifier,
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
@@ -40,7 +41,7 @@ fun IntensityChart(
             .fillMaxWidth()
             .height(200.dp),
     ) {
-        val windowStart = nowMillis - WINDOW_MILLIS
+        val windowStart = nowMillis - windowMillis
 
         val paddingLeft = 36.dp.toPx()
         val paddingRight = 8.dp.toPx()
@@ -51,7 +52,7 @@ fun IntensityChart(
         val chartHeight = size.height - paddingTop - paddingBottom
 
         fun xFor(timeMillis: Long): Float {
-            val fraction = ((timeMillis - windowStart).toFloat() / WINDOW_MILLIS).coerceIn(0f, 1f)
+            val fraction = ((timeMillis - windowStart).toFloat() / windowMillis).coerceIn(0f, 1f)
             return paddingLeft + fraction * chartWidth
         }
 
@@ -72,11 +73,23 @@ fun IntensityChart(
         )
 
         val visible = records.filter { it.recordedAt >= windowStart }
-        if (visible.isEmpty()) return@Canvas
+
+        // Live point at the right edge (now) for current intensity
+        val livePoint = Offset(xFor(nowMillis), yFor(currentIntensity))
+
+        if (visible.isEmpty()) {
+            // No recorded points — just draw the live point
+            drawCircle(
+                color = pointColor,
+                radius = POINT_RADIUS,
+                center = livePoint,
+            )
+            return@Canvas
+        }
 
         val points = visible.map { Offset(xFor(it.recordedAt), yFor(it.intensity)) }
 
-        // Draw lines
+        // Draw lines between recorded points
         for (i in 0 until points.size - 1) {
             drawLine(
                 color = lineColor,
@@ -86,7 +99,15 @@ fun IntensityChart(
             )
         }
 
-        // Draw points
+        // Line from last recorded point to live point
+        drawLine(
+            color = lineColor,
+            start = points.last(),
+            end = livePoint,
+            strokeWidth = 3f,
+        )
+
+        // Draw recorded points
         for (point in points) {
             drawCircle(
                 color = pointColor,
@@ -94,6 +115,13 @@ fun IntensityChart(
                 center = point,
             )
         }
+
+        // Draw live point
+        drawCircle(
+            color = pointColor,
+            radius = POINT_RADIUS,
+            center = livePoint,
+        )
     }
 }
 
