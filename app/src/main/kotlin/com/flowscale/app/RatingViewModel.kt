@@ -8,7 +8,11 @@ import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import java.time.Instant
+
+private const val RECENT_WINDOW_MILLIS = 5L * 60 * 1_000
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,6 +31,11 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     val currentValue: StateFlow<Double> = _currentValue
 
     val records = dao.getAll()
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    val recentRecords = _currentValue.flatMapLatest {
+        dao.getSince(Instant.now().toEpochMilli() - RECENT_WINDOW_MILLIS)
+    }
 
     private val _volumeKeysEnabled = MutableStateFlow(false)
     val volumeKeysEnabled: StateFlow<Boolean> = _volumeKeysEnabled

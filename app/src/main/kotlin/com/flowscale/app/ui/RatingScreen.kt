@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val currentValue by viewModel.currentValue.collectAsState()
     val volumeKeysEnabled by viewModel.volumeKeysEnabled.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
+    val recentRecords by viewModel.recentRecords.collectAsState(initial = emptyList())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,5 +78,12 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
                 Text(if (keepScreenOn) "Bildschirm an: Ein" else "Bildschirm an: Aus")
             }
         }
+
+        Spacer(Modifier.height(32.dp))
+
+        IntensityChart(
+            records = recentRecords,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
     }
 }

@@ -13,4 +13,7 @@ interface IntensityRecordDao {
 
     @Query("SELECT * FROM intensity_records ORDER BY recordedAt DESC")
     fun getAll(): Flow<List<IntensityRecord>>
+
+    @Query("SELECT * FROM intensity_records WHERE recordedAt >= :sinceMillis ORDER BY recordedAt ASC")
+    fun getSince(sinceMillis: Long): Flow<List<IntensityRecord>>
 }
