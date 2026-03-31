@@ -1,16 +1,46 @@
 package com.flowscale.app
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.flowscale.app.data.AppDatabase
+import com.flowscale.app.data.IntensityRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class RatingViewModel : ViewModel() {
+class RatingViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val db = Room.databaseBuilder(
+        application,
+        AppDatabase::class.java,
+        "flowscale.db",
+    ).build()
+
+    private val dao = db.intensityRecordDao()
 
     private val _startValue = MutableStateFlow(0.0)
     val startValue: StateFlow<Double> = _startValue
 
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
+
+    val records = dao.getAll()
+
+    private val _volumeKeysEnabled = MutableStateFlow(false)
+    val volumeKeysEnabled: StateFlow<Boolean> = _volumeKeysEnabled
+
+    private val _keepScreenOn = MutableStateFlow(false)
+    val keepScreenOn: StateFlow<Boolean> = _keepScreenOn
+
+    fun toggleVolumeKeys() {
+        _volumeKeysEnabled.value = !_volumeKeysEnabled.value
+    }
+
+    fun toggleKeepScreenOn() {
+        _keepScreenOn.value = !_keepScreenOn.value
+    }
 
     fun setStartValue(value: Double) {
         val clamped = value.coerceIn(MIN_VALUE, MAX_VALUE)
@@ -22,6 +52,7 @@ class RatingViewModel : ViewModel() {
         val next = _currentValue.value + STEP
         if (next <= MAX_VALUE) {
             _currentValue.value = next
+            recordIntensity(next)
         }
     }
 
@@ -29,6 +60,13 @@ class RatingViewModel : ViewModel() {
         val next = _currentValue.value - STEP
         if (next >= MIN_VALUE) {
             _currentValue.value = next
+            recordIntensity(next)
+        }
+    }
+
+    private fun recordIntensity(value: Double) {
+        viewModelScope.launch {
+            dao.insert(IntensityRecord(intensity = value))
         }
     }
 

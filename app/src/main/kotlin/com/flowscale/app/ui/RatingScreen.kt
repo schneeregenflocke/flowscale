@@ -22,6 +22,8 @@ import com.flowscale.app.RatingViewModel
 fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val startValue by viewModel.startValue.collectAsState()
     val currentValue by viewModel.currentValue.collectAsState()
+    val volumeKeysEnabled by viewModel.volumeKeysEnabled.collectAsState()
+    val keepScreenOn by viewModel.keepScreenOn.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,6 +62,18 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(width = 96.dp, height = 56.dp),
             ) {
                 Text("+ 0.25", style = MaterialTheme.typography.titleMedium)
+            }
+        }
+
+        Spacer(Modifier.height(48.dp))
+
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Button(onClick = { viewModel.toggleVolumeKeys() }) {
+                Text(if (volumeKeysEnabled) "Lautstärketasten: Ein" else "Lautstärketasten: Aus")
+            }
+
+            Button(onClick = { viewModel.toggleKeepScreenOn() }) {
+                Text(if (keepScreenOn) "Bildschirm an: Ein" else "Bildschirm an: Aus")
             }
         }
     }

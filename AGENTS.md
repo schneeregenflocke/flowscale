@@ -1,6 +1,6 @@
 # FlowScale
 
-Android-App (APK): kontinuierliche, visuelle Numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).
+Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).
 
 ## Architektur
 
@@ -17,7 +17,7 @@ Android-App (APK): kontinuierliche, visuelle Numerische Rating-Skala (NRS) als P
 | `ANDROID_HOME` | `~/Android/Sdk`           | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle und `adb` finden darüber alle SDK-Komponenten. |
 | `JAVA_HOME`    | `/opt/android-studio/jbr` | JDK 21, das mit Android Studio gebundelt wird. Gradle nutzt es zum Kompilieren.                                  |
 
-Am besten in `~/.zshenv` oder `~/.zprofile` dauerhaft setzen.
+Am besten in `~/.zshenv` dauerhaft setzen.
 
 ## Build
 
@@ -42,7 +42,7 @@ $ANDROID_HOME/platform-tools/adb install app/build/outputs/apk/debug/app-debug.a
 $ANDROID_HOME/platform-tools/adb shell am start -n com.flowscale.app/.MainActivity
 ```
 
-## Physisches Gerät (Alternative zum Emulator)
+## Physisches Gerät
 
 1. USB-Debugging auf dem Android-Gerät aktivieren (Einstellungen → Über das Telefon → 7× auf Build-Nummer tippen → Entwickleroptionen → USB-Debugging)
 2. Gerät per USB verbinden
