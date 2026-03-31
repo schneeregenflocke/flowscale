@@ -12,38 +12,39 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.flowscale.app.RatingViewModel
+import kotlinx.coroutines.delay
+import java.time.Instant
 
 @Composable
 fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
-    val startValue by viewModel.startValue.collectAsState()
     val currentValue by viewModel.currentValue.collectAsState()
     val volumeKeysEnabled by viewModel.volumeKeysEnabled.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
     val recentRecords by viewModel.recentRecords.collectAsState(initial = emptyList())
+
+    var nowMillis by remember { mutableLongStateOf(Instant.now().toEpochMilli()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1_000)
+            nowMillis = Instant.now().toEpochMilli()
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxSize(),
     ) {
-        Text("Startwert", style = MaterialTheme.typography.labelLarge)
-        Spacer(Modifier.height(8.dp))
-        SpinBox(
-            value = startValue,
-            onValueChange = { viewModel.setStartValue(it) },
-            minValue = RatingViewModel.MIN_VALUE,
-            maxValue = RatingViewModel.MAX_VALUE,
-            step = RatingViewModel.STEP,
-        )
-
-        Spacer(Modifier.height(48.dp))
-
         Text(
             text = formatRating(currentValue),
             style = MaterialTheme.typography.displayLarge,
@@ -83,6 +84,7 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
 
         IntensityChart(
             records = recentRecords,
+            nowMillis = nowMillis,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
     }

@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.time.Instant
 
@@ -24,16 +26,20 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
 
     private val dao = db.intensityRecordDao()
 
-    private val _startValue = MutableStateFlow(0.0)
-    val startValue: StateFlow<Double> = _startValue
-
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
 
     val records = dao.getAll()
 
+    private val ticker = flow {
+        while (true) {
+            emit(Unit)
+            delay(1_000)
+        }
+    }
+
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    val recentRecords = _currentValue.flatMapLatest {
+    val recentRecords = ticker.flatMapLatest {
         dao.getSince(Instant.now().toEpochMilli() - RECENT_WINDOW_MILLIS)
     }
 
@@ -49,12 +55,6 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
 
     fun toggleKeepScreenOn() {
         _keepScreenOn.value = !_keepScreenOn.value
-    }
-
-    fun setStartValue(value: Double) {
-        val clamped = value.coerceIn(MIN_VALUE, MAX_VALUE)
-        _startValue.value = clamped
-        _currentValue.value = clamped
     }
 
     fun increment() {

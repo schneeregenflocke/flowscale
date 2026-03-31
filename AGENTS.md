@@ -22,8 +22,6 @@ Am besten in `~/.zshenv` dauerhaft setzen.
 ## Build
 
 ```sh
-export ANDROID_HOME=~/Android/Sdk
-export JAVA_HOME=/opt/android-studio/jbr
 ./gradlew assembleDebug
 ```
 

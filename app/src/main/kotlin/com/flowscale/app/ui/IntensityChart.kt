@@ -17,7 +17,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.flowscale.app.data.IntensityRecord
-import java.time.Instant
 
 private const val Y_MIN = 1.0
 private const val Y_MAX = 10.0
@@ -27,6 +26,7 @@ private const val POINT_RADIUS = 5f
 @Composable
 fun IntensityChart(
     records: List<IntensityRecord>,
+    nowMillis: Long,
     modifier: Modifier = Modifier,
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
@@ -40,8 +40,7 @@ fun IntensityChart(
             .fillMaxWidth()
             .height(200.dp),
     ) {
-        val now = Instant.now().toEpochMilli()
-        val windowStart = now - WINDOW_MILLIS
+        val windowStart = nowMillis - WINDOW_MILLIS
 
         val paddingLeft = 36.dp.toPx()
         val paddingRight = 8.dp.toPx()
