@@ -10,17 +10,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val LightColorScheme = lightColorScheme(
-    primary = Green40,
-    secondary = GreenGrey40,
-    tertiary = Teal40,
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Green80,
-    secondary = GreenGrey80,
-    tertiary = Teal80,
-)
+private val LightColorScheme = lightColorScheme()
+private val DarkColorScheme = darkColorScheme()
 
 @Composable
 fun FlowScaleTheme(
