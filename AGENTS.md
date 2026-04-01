@@ -89,11 +89,8 @@ grim -g 'X,Y WxH' screenshots/emulator-screenshot.png
 
 Mögliche nächste Ziele (grobe Reihenfolge):
 
-1. **Persistenz** — Startwert und aktuellen Wert speichern (DataStore / Room), damit sie App-Neustarts überleben
-2. **Verlauf / Zeitstempel** — Jede Änderung mit Zeitstempel loggen (Kern des PROM-Konzepts)
-3. **Visuelle Skala** — Slider oder Balken-Visualisierung des aktuellen Werts zusätzlich zur Zahl
-4. **Export** — Daten als CSV/JSON exportieren
-5. **Einstellungen** — Schrittweite, Wertebereich, Sprache konfigurierbar machen
+1. **Export** — Daten als CSV/JSON exportieren
+2. **Einstellungen** — Schrittweite, Wertebereich, Sprache konfigurierbar machen
 
 ## Offene TODOs
 
