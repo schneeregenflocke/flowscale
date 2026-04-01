@@ -78,11 +78,11 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(onClick = { viewModel.toggleVolumeKeys() }) {
-                Text(if (volumeKeysEnabled) "Lautstärketasten: Ein" else "Lautstärketasten: Aus")
+                Text(if (volumeKeysEnabled) "Lautstärketasten → Intensität" else "Lautstärketasten → Lautstärke")
             }
 
             Button(onClick = { viewModel.toggleKeepScreenOn() }) {
-                Text(if (keepScreenOn) "Bildschirm an: Ein" else "Bildschirm an: Aus")
+                Text(if (keepScreenOn) "Bildschirm: immer an" else "Bildschirm: auto")
             }
         }
 
