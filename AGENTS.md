@@ -94,8 +94,8 @@ Mögliche nächste Ziele (grobe Reihenfolge):
 
 ## Offene TODOs
 
-- R8/ProGuard für Release aktivieren (`isMinifyEnabled = true` + `proguard-rules.pro`), bevor die App veröffentlicht wird
-- Launcher-Icon (`android:icon` / `android:roundIcon`) im Manifest und als Ressource anlegen
+- ~~R8/ProGuard für Release aktivieren (`isMinifyEnabled = true` + `proguard-rules.pro`), bevor die App veröffentlicht wird~~ ✅
+- ~~Launcher-Icon (`android:icon` / `android:roundIcon`) im Manifest und als Ressource anlegen~~ ✅
 
 ## Konventionen
 
