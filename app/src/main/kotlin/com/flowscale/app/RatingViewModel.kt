@@ -29,6 +29,12 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
 
+    init {
+        viewModelScope.launch {
+            dao.getLatest()?.let { _currentValue.value = it.intensity }
+        }
+    }
+
     private val _windowMinutes = MutableStateFlow(DEFAULT_WINDOW_MINUTES)
     val windowMinutes: StateFlow<Int> = _windowMinutes
 

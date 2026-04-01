@@ -73,12 +73,39 @@ fun IntensityChart(
         )
 
         val visible = records.filter { it.recordedAt >= windowStart }
+        val preWindowRecord = records.lastOrNull { it.recordedAt < windowStart }
 
         // Live point at the right edge (now) for current intensity
         val livePoint = Offset(xFor(nowMillis), yFor(currentIntensity))
 
-        if (visible.isEmpty()) {
-            // No recorded points — just draw the live point
+        // Compute left-edge interpolated point
+        val leftEdgePoint: Offset? = if (preWindowRecord != null) {
+            if (visible.isNotEmpty()) {
+                val first = visible.first()
+                val timeDelta = first.recordedAt - preWindowRecord.recordedAt
+                if (timeDelta > 0) {
+                    val fraction = (windowStart - preWindowRecord.recordedAt).toDouble() / timeDelta
+                    val interpolated = preWindowRecord.intensity + fraction * (first.intensity - preWindowRecord.intensity)
+                    Offset(xFor(windowStart), yFor(interpolated))
+                } else {
+                    Offset(xFor(windowStart), yFor(preWindowRecord.intensity))
+                }
+            } else {
+                val timeDelta = nowMillis - preWindowRecord.recordedAt
+                if (timeDelta > 0) {
+                    val fraction = (windowStart - preWindowRecord.recordedAt).toDouble() / timeDelta
+                    val interpolated = preWindowRecord.intensity + fraction * (currentIntensity - preWindowRecord.intensity)
+                    Offset(xFor(windowStart), yFor(interpolated))
+                } else {
+                    Offset(xFor(windowStart), yFor(preWindowRecord.intensity))
+                }
+            }
+        } else {
+            null
+        }
+
+        if (visible.isEmpty() && leftEdgePoint == null) {
+            // No recorded points at all — just draw the live point
             drawCircle(
                 color = pointColor,
                 radius = POINT_RADIUS,
@@ -87,28 +114,34 @@ fun IntensityChart(
             return@Canvas
         }
 
-        val points = visible.map { Offset(xFor(it.recordedAt), yFor(it.intensity)) }
+        // Build complete list of points for drawing
+        val allPoints = buildList {
+            leftEdgePoint?.let { add(it) }
+            addAll(visible.map { Offset(xFor(it.recordedAt), yFor(it.intensity)) })
+        }
 
-        // Draw lines between recorded points
-        for (i in 0 until points.size - 1) {
+        // Draw lines between all points (including left edge → first visible)
+        for (i in 0 until allPoints.size - 1) {
             drawLine(
                 color = lineColor,
-                start = points[i],
-                end = points[i + 1],
+                start = allPoints[i],
+                end = allPoints[i + 1],
                 strokeWidth = 3f,
             )
         }
 
-        // Line from last recorded point to live point
-        drawLine(
-            color = lineColor,
-            start = points.last(),
-            end = livePoint,
-            strokeWidth = 3f,
-        )
+        // Line from last point to live point
+        if (allPoints.isNotEmpty()) {
+            drawLine(
+                color = lineColor,
+                start = allPoints.last(),
+                end = livePoint,
+                strokeWidth = 3f,
+            )
+        }
 
-        // Draw recorded points
-        for (point in points) {
+        // Draw all points
+        for (point in allPoints) {
             drawCircle(
                 color = pointColor,
                 radius = POINT_RADIUS,
