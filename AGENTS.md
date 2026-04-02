@@ -12,17 +12,19 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 
 ## Umgebungsvariablen
 
-| Variable       | Wert                      | Zweck                                                                                                            |
-| -------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `ANDROID_HOME` | `~/Android/Sdk`           | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle und `adb` finden darüber alle SDK-Komponenten. |
-| `JAVA_HOME`    | `/opt/android-studio/jbr` | JDK 21, das mit Android Studio gebundelt wird. Gradle nutzt es zum Kompilieren.                                  |
+| Variable       | Wert                           | Zweck                                                                                                  |
+| -------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `ANDROID_HOME` | `~/Android/Sdk`                | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle findet darüber alle SDK-Komponenten. |
+| `JAVA_HOME`    | `/usr/lib/jvm/java-21-openjdk` | JDK 21 (via `pacman -S jdk21-openjdk`). Gradle nutzt es zum Kompilieren.                               |
 
 Am besten in `~/.zshenv` dauerhaft setzen.
 
 ## Build
 
+`adb` wird über `android-tools` bereitgestellt (`sudo pacman -S android-tools`).
+
 ```sh
-./gradlew assembleDebug
+JAVA_HOME=/usr/lib/jvm/java-21-openjdk ./gradlew assembleDebug
 ```
 
 ## Emulator starten
@@ -36,8 +38,8 @@ QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd FlowScale -gpu auto &
 Warten bis gebootet, dann App installieren und starten:
 
 ```sh
-$ANDROID_HOME/platform-tools/adb install app/build/outputs/apk/debug/app-debug.apk
-$ANDROID_HOME/platform-tools/adb shell am start -n com.flowscale.app/.MainActivity
+adb install app/build/outputs/apk/debug/app-debug.apk
+adb shell am start -n com.flowscale.app/.MainActivity
 ```
 
 ## Physisches Gerät
