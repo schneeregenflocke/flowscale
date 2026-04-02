@@ -51,14 +51,15 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event?.repeatCount != 0) return true // single-step: ignore repeats
         if (!viewModel.volumeKeysEnabled.value) return super.onKeyDown(keyCode, event)
         return when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (event?.repeatCount != 0) return true // single-step: ignore repeats
                 viewModel.increment()
                 true
             }
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (event?.repeatCount != 0) return true // single-step: ignore repeats
                 viewModel.decrement()
                 true
             }

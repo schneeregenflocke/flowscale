@@ -7,8 +7,35 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 - Native Android (Kotlin, Jetpack Compose)
 - AGP 9.1 mit Built-in Kotlin (kein separates `kotlin-android` Plugin)
 - Compose Compiler Plugin (`kotlin-compose`) wird separat angewendet
+- `FlowScaleApplication` hält die Room-Datenbank als Singleton; ViewModels greifen über `getApplication<FlowScaleApplication>().database` darauf zu
 - iOS-Portierung soll langfristig möglich bleiben (KMP als Option)
 - Min SDK 26, Target/Compile SDK 36
+
+## Voraussetzungen (Arch Linux)
+
+Alle Build-Abhängigkeiten lassen sich über `pacman` installieren:
+
+```sh
+sudo pacman -S jdk21-openjdk android-tools
+```
+
+| Paket           | Zweck                                    |
+| --------------- | ---------------------------------------- |
+| `jdk21-openjdk` | JDK 21 — Gradle nutzt es zum Kompilieren |
+| `android-tools` | `adb`, `fastboot` — Deploy auf Geräte    |
+
+Das Android SDK (Build-Tools, Plattformen) wird separat unter `~/Android/Sdk` verwaltet (Commandline-Tools oder Android Studio).
+
+### JDK-Version
+
+AGP 9.x ist für JDK 17–21 freigegeben. JDK 26 (Arch-Default) scheitert beim `jlink`/`JdkImageTransform`-Schritt. Deshalb:
+
+- Entweder `JAVA_HOME` explizit setzen (s. u.), oder
+- `sudo archlinux-java set java-21-openjdk` für systemweiten Default
+
+### Kotlin über pacman
+
+Das `kotlin`-Paket aus pacman ist **nicht nötig** — der Kotlin-Compiler ist im Gradle-Plugin eingebettet.
 
 ## Umgebungsvariablen
 
@@ -17,14 +44,32 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 | `ANDROID_HOME` | `~/Android/Sdk`                | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle findet darüber alle SDK-Komponenten. |
 | `JAVA_HOME`    | `/usr/lib/jvm/java-21-openjdk` | JDK 21 (via `pacman -S jdk21-openjdk`). Gradle nutzt es zum Kompilieren.                               |
 
-Am besten in `~/.zshenv` dauerhaft setzen.
+Dauerhaft in `~/.zshenv` setzen:
+
+```sh
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+```
+
+`sdk.dir` wird pro Host in `local.properties` gesetzt (Datei ist `.gitignore`d):
+
+```properties
+sdk.dir=/home/<user>/Android/Sdk
+```
 
 ## Build
 
-`adb` wird über `android-tools` bereitgestellt (`sudo pacman -S android-tools`).
+```sh
+./gradlew assembleDebug
+```
+
+## Tests
 
 ```sh
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk ./gradlew assembleDebug
+# Unit-Tests (kein Gerät nötig)
+./gradlew testDebugUnitTest
+
+# Instrumentierungstests (Gerät/Emulator muss verbunden sein)
+./gradlew connectedDebugAndroidTest
 ```
 
 ## Emulator starten
@@ -48,6 +93,8 @@ adb shell am start -n com.flowscale.app/.MainActivity
 2. Gerät per USB verbinden
 3. `adb devices` prüfen, ob das Gerät erkannt wird
 4. `adb install app/build/outputs/apk/debug/app-debug.apk`
+
+Bei `INSTALL_FAILED_UPDATE_INCOMPATIBLE` (anderer Signing-Key): erst `adb uninstall com.flowscale.app`, dann erneut installieren.
 
 ## Screenshots per CLI (Hyprland + grim)
 
