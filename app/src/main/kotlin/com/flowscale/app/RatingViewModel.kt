@@ -3,14 +3,14 @@ package com.flowscale.app
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
 
@@ -18,13 +18,7 @@ private const val DEFAULT_WINDOW_MINUTES = 5
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val db = Room.databaseBuilder(
-        application,
-        AppDatabase::class.java,
-        "flowscale.db",
-    ).build()
-
-    private val dao = db.intensityRecordDao()
+    private val dao = getApplication<FlowScaleApplication>().database.intensityRecordDao()
 
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
@@ -42,7 +36,7 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         _windowMinutes.value = minutes
     }
 
-    val records = dao.getAll()
+    private val records = dao.getAll()
 
     private val ticker = flow {
         while (true) {
@@ -51,12 +45,14 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    val recentRecords = kotlinx.coroutines.flow.combine(ticker, _windowMinutes) { _, minutes -> minutes }
-        .flatMapLatest { minutes ->
-            val windowMillis = minutes.toLong() * 60 * 1_000
-            dao.getSince(Instant.now().toEpochMilli() - windowMillis)
-        }
+    val recentRecords = combine(records, ticker, _windowMinutes) { allRecords, _, minutes ->
+        val windowStart = Instant.now().toEpochMilli() - minutes.toLong() * 60 * 1_000
+        selectRecentRecords(allRecords, windowStart)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = emptyList(),
+    )
 
     private val _volumeKeysEnabled = MutableStateFlow(false)
     val volumeKeysEnabled: StateFlow<Boolean> = _volumeKeysEnabled
@@ -98,5 +94,19 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         const val STEP = 0.25
         const val MIN_VALUE = 0.0
         const val MAX_VALUE = 10.0
+    }
+}
+
+internal fun selectRecentRecords(
+    allRecords: List<IntensityRecord>,
+    windowStartMillis: Long,
+): List<IntensityRecord> {
+    val firstVisibleIndex = allRecords.indexOfFirst { it.recordedAt >= windowStartMillis }
+
+    return when {
+        firstVisibleIndex > 0 -> allRecords.subList(firstVisibleIndex - 1, allRecords.size)
+        firstVisibleIndex == 0 -> allRecords
+        allRecords.isNotEmpty() -> listOf(allRecords.last())
+        else -> emptyList()
     }
 }

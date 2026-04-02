@@ -35,7 +35,7 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val currentValue by viewModel.currentValue.collectAsState()
     val volumeKeysEnabled by viewModel.volumeKeysEnabled.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
-    val recentRecords by viewModel.recentRecords.collectAsState(initial = emptyList())
+    val recentRecords by viewModel.recentRecords.collectAsState()
     val windowMinutes by viewModel.windowMinutes.collectAsState()
 
     var nowMillis by remember { mutableLongStateOf(Instant.now().toEpochMilli()) }

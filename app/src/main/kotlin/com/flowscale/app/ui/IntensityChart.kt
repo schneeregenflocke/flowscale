@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.flowscale.app.data.IntensityRecord
 
-private const val Y_MIN = 1.0
+private const val Y_MIN = 0.0
 private const val Y_MAX = 10.0
 private const val POINT_RADIUS = 5f
 
@@ -171,7 +171,7 @@ private fun DrawScope.drawGridLines(
     val dashEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 4f))
     val labelStyle = TextStyle(color = labelColor, fontSize = 10.sp)
 
-    for (tick in 1..10) {
+    for (tick in 0..10) {
         val y = yFor(tick.toDouble())
         drawLine(
             color = gridColor,
