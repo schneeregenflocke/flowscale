@@ -96,6 +96,25 @@ adb shell am start -n com.flowscale.app/.MainActivity
 
 Bei `INSTALL_FAILED_UPDATE_INCOMPATIBLE` (anderer Signing-Key): erst `adb uninstall com.flowscale.app`, dann erneut installieren.
 
+## Datenbank inspizieren
+
+Die App speichert Datenpunkte in einer Room/SQLite-Datenbank (`flowscale.db`) auf dem Gerät. Dateien auflisten:
+
+```sh
+adb shell "run-as com.flowscale.app ls -la databases/"
+```
+
+DB auf den Host kopieren und lokal abfragen (sqlite3 ist auf dem Gerät i.d.R. nicht verfügbar):
+
+```sh
+adb shell "run-as com.flowscale.app cat databases/flowscale.db" > /tmp/flowscale.db
+sqlite3 /tmp/flowscale.db "SELECT COUNT(*) FROM intensity_records;"
+sqlite3 /tmp/flowscale.db ".schema intensity_records"
+sqlite3 /tmp/flowscale.db "SELECT * FROM intensity_records ORDER BY recordedAt ASC LIMIT 10;"
+```
+
+**Hinweis:** `adb install` bewahrt App-Daten (gleicher Signing-Key). Daten gehen nur bei `adb uninstall`, inkompatiblen Signaturen oder explizitem „Clear Data" verloren.
+
 ## Screenshots per CLI (Hyprland + grim)
 
 Voraussetzungen: `grim` und `hyprctl` (Hyprland Compositor).
