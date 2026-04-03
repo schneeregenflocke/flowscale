@@ -10,6 +10,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -39,7 +41,10 @@ fun IntensityChart(
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(200.dp)
+            .semantics {
+                contentDescription = "Intensitätsverlauf der letzten Messungen"
+            },
     ) {
         val windowStart = nowMillis - windowMillis
 

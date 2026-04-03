@@ -1,6 +1,8 @@
 package com.flowscale.app
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.flowscale.app.data.IntensityRecord
@@ -9,23 +11,39 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
 
 private const val DEFAULT_WINDOW_MINUTES = 5
+private const val PREFS_NAME = "flowscale_prefs"
+private const val KEY_VOLUME_KEYS = "volume_keys_enabled"
+private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = getApplication<FlowScaleApplication>().database.intensityRecordDao()
+    private val prefs = application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     private val _currentValue = MutableStateFlow(0.0)
     val currentValue: StateFlow<Double> = _currentValue
 
+    private val _nowMillis = MutableStateFlow(Instant.now().toEpochMilli())
+    val nowMillis: StateFlow<Long> = _nowMillis
+
     init {
         viewModelScope.launch {
-            dao.getLatest()?.let { _currentValue.value = it.intensity }
+            try {
+                dao.getLatest()?.let { _currentValue.value = it.intensity }
+            } catch (e: Exception) {
+                Log.e("RatingViewModel", "Failed to load latest record", e)
+            }
+        }
+        viewModelScope.launch {
+            while (true) {
+                delay(1_000)
+                _nowMillis.value = Instant.now().toEpochMilli()
+            }
         }
     }
 
@@ -38,15 +56,8 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
 
     private val records = dao.getAll()
 
-    private val ticker = flow {
-        while (true) {
-            emit(Unit)
-            delay(1_000)
-        }
-    }
-
-    val recentRecords = combine(records, ticker, _windowMinutes) { allRecords, _, minutes ->
-        val windowStart = Instant.now().toEpochMilli() - minutes.toLong() * 60 * 1_000
+    val recentRecords = combine(records, _nowMillis, _windowMinutes) { allRecords, now, minutes ->
+        val windowStart = now - minutes.toLong() * 60 * 1_000
         selectRecentRecords(allRecords, windowStart)
     }.stateIn(
         scope = viewModelScope,
@@ -54,18 +65,22 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         initialValue = emptyList(),
     )
 
-    private val _volumeKeysEnabled = MutableStateFlow(false)
+    private val _volumeKeysEnabled = MutableStateFlow(prefs.getBoolean(KEY_VOLUME_KEYS, false))
     val volumeKeysEnabled: StateFlow<Boolean> = _volumeKeysEnabled
 
-    private val _keepScreenOn = MutableStateFlow(false)
+    private val _keepScreenOn = MutableStateFlow(prefs.getBoolean(KEY_KEEP_SCREEN_ON, false))
     val keepScreenOn: StateFlow<Boolean> = _keepScreenOn
 
     fun toggleVolumeKeys() {
-        _volumeKeysEnabled.value = !_volumeKeysEnabled.value
+        val newValue = !_volumeKeysEnabled.value
+        _volumeKeysEnabled.value = newValue
+        prefs.edit().putBoolean(KEY_VOLUME_KEYS, newValue).apply()
     }
 
     fun toggleKeepScreenOn() {
-        _keepScreenOn.value = !_keepScreenOn.value
+        val newValue = !_keepScreenOn.value
+        _keepScreenOn.value = newValue
+        prefs.edit().putBoolean(KEY_KEEP_SCREEN_ON, newValue).apply()
     }
 
     fun increment() {
@@ -86,7 +101,11 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun recordIntensity(value: Double) {
         viewModelScope.launch {
-            dao.insert(IntensityRecord(intensity = value))
+            try {
+                dao.insert(IntensityRecord(intensity = value))
+            } catch (e: Exception) {
+                Log.e("RatingViewModel", "Failed to insert intensity record", e)
+            }
         }
     }
 

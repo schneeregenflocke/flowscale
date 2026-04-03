@@ -16,19 +16,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.flowscale.app.RatingViewModel
-import kotlinx.coroutines.delay
-import java.time.Instant
 
 @Composable
 fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
@@ -37,14 +35,9 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
     val recentRecords by viewModel.recentRecords.collectAsState()
     val windowMinutes by viewModel.windowMinutes.collectAsState()
+    val nowMillis by viewModel.nowMillis.collectAsState()
 
-    var nowMillis by remember { mutableLongStateOf(Instant.now().toEpochMilli()) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1_000)
-            nowMillis = Instant.now().toEpochMilli()
-        }
-    }
+    val stepLabel = formatRating(RatingViewModel.STEP)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,6 +47,9 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
         Text(
             text = formatRating(currentValue),
             style = MaterialTheme.typography.displayLarge,
+            modifier = Modifier.semantics {
+                contentDescription = "Aktuelle Intensität: ${formatRating(currentValue)}"
+            },
         )
 
         Spacer(Modifier.height(32.dp))
@@ -61,16 +57,20 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
             Button(
                 onClick = { viewModel.decrement() },
-                modifier = Modifier.size(width = 96.dp, height = 56.dp),
+                modifier = Modifier
+                    .size(width = 96.dp, height = 56.dp)
+                    .semantics { contentDescription = "Intensität um $stepLabel verringern" },
             ) {
-                Text("− 0.25", style = MaterialTheme.typography.titleMedium)
+                Text("− $stepLabel", style = MaterialTheme.typography.titleMedium)
             }
 
             Button(
                 onClick = { viewModel.increment() },
-                modifier = Modifier.size(width = 96.dp, height = 56.dp),
+                modifier = Modifier
+                    .size(width = 96.dp, height = 56.dp)
+                    .semantics { contentDescription = "Intensität um $stepLabel erhöhen" },
             ) {
-                Text("+ 0.25", style = MaterialTheme.typography.titleMedium)
+                Text("+ $stepLabel", style = MaterialTheme.typography.titleMedium)
             }
         }
 
