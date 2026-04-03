@@ -15,12 +15,12 @@ class FormatRatingTest {
     }
 
     @Test
-    fun quarterStepsDisplayCorrectly() {
-        assertEquals("0.25", formatRating(0.25))
-        assertEquals("0.5", formatRating(0.5))
-        assertEquals("0.75", formatRating(0.75))
-        assertEquals("1.25", formatRating(1.25))
-        assertEquals("9.75", formatRating(9.75))
+    fun tenthStepsDisplayCorrectly() {
+        assertEquals("0.1", formatRating(0.1))
+        assertEquals("0.2", formatRating(0.2))
+        assertEquals("0.3", formatRating(0.3))
+        assertEquals("1.1", formatRating(1.1))
+        assertEquals("9.9", formatRating(9.9))
     }
 
     @Test

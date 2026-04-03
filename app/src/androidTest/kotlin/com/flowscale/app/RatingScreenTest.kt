@@ -45,15 +45,15 @@ class RatingScreenTest {
     @Test
     fun incrementChangesDisplayedValue() {
         launchScreen()
-        composeTestRule.onNodeWithText("+ 0.25").performClick()
-        composeTestRule.onNodeWithText("0.25").assertExists()
+        composeTestRule.onNodeWithText("+ 0.1").performClick()
+        composeTestRule.onNodeWithText("0.1").assertExists()
     }
 
     @Test
     fun decrementAfterIncrementReturnsToZero() {
         launchScreen()
-        composeTestRule.onNodeWithText("+ 0.25").performClick()
-        composeTestRule.onNodeWithText("− 0.25").performClick()
+        composeTestRule.onNodeWithText("+ 0.1").performClick()
+        composeTestRule.onNodeWithText("− 0.1").performClick()
         composeTestRule.onNodeWithText("0").assertExists()
     }
 

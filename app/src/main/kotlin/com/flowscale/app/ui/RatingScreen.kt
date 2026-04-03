@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -76,12 +77,43 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
 
         Spacer(Modifier.height(48.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Button(onClick = { viewModel.toggleVolumeKeys() }) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Button(
+                onClick = { viewModel.toggleVolumeKeys() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (volumeKeysEnabled) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant
+                    },
+                    contentColor = if (volumeKeysEnabled) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                ),
+            ) {
                 Text(if (volumeKeysEnabled) "Lautstärketasten → Intensität" else "Lautstärketasten → Lautstärke")
             }
 
-            Button(onClick = { viewModel.toggleKeepScreenOn() }) {
+            Button(
+                onClick = { viewModel.toggleKeepScreenOn() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (keepScreenOn) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant
+                    },
+                    contentColor = if (keepScreenOn) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                ),
+            ) {
                 Text(if (keepScreenOn) "Bildschirm: immer an" else "Bildschirm: auto")
             }
         }

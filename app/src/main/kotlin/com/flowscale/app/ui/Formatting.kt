@@ -1,8 +1,6 @@
 package com.flowscale.app.ui
 
+import java.math.BigDecimal
+
 fun formatRating(value: Double): String =
-    if (value == value.toLong().toDouble()) {
-        value.toLong().toString()
-    } else {
-        value.toBigDecimal().stripTrailingZeros().toPlainString()
-    }
+    BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
