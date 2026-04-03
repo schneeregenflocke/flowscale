@@ -1,5 +1,6 @@
 package com.flowscale.app
 
+import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -23,6 +24,7 @@ class RatingScreenTest {
         val app = InstrumentationRegistry.getInstrumentation()
             .targetContext.applicationContext as FlowScaleApplication
         runBlocking { app.database.clearAllTables() }
+        app.getSharedPreferences("flowscale_prefs", Context.MODE_PRIVATE).edit().clear().commit()
         viewModel = RatingViewModel(app)
     }
 

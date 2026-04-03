@@ -11,6 +11,8 @@ class FlowScaleApplication : Application() {
             this,
             AppDatabase::class.java,
             "flowscale.db",
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 }

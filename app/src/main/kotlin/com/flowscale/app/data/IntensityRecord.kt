@@ -1,10 +1,14 @@
 package com.flowscale.app.data
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.Instant
 
-@Entity(tableName = "intensity_records")
+@Entity(
+    tableName = "intensity_records",
+    indices = [Index("recordedAt")],
+)
 data class IntensityRecord(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val intensity: Double,
