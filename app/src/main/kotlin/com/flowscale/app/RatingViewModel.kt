@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.Instant
 
 private const val DEFAULT_WINDOW_MINUTES = 5
@@ -84,7 +86,7 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun increment() {
-        val next = _currentValue.value + STEP
+        val next = normalizeToTenths(_currentValue.value + STEP)
         if (next <= MAX_VALUE) {
             _currentValue.value = next
             recordIntensity(next)
@@ -92,12 +94,15 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun decrement() {
-        val next = _currentValue.value - STEP
+        val next = normalizeToTenths(_currentValue.value - STEP)
         if (next >= MIN_VALUE) {
             _currentValue.value = next
             recordIntensity(next)
         }
     }
+
+    private fun normalizeToTenths(value: Double): Double =
+        BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP).toDouble()
 
     private fun recordIntensity(value: Double) {
         viewModelScope.launch {
@@ -110,7 +115,7 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     companion object {
-        const val STEP = 0.25
+        const val STEP = 0.1
         const val MIN_VALUE = 0.0
         const val MAX_VALUE = 10.0
     }
