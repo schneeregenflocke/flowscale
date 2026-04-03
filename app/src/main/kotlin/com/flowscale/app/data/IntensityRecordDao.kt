@@ -11,7 +11,7 @@ interface IntensityRecordDao {
     @Insert
     suspend fun insert(record: IntensityRecord)
 
-    @Query("SELECT * FROM intensity_records ORDER BY recordedAt DESC")
+    @Query("SELECT * FROM intensity_records ORDER BY recordedAt ASC")
     fun getAll(): Flow<List<IntensityRecord>>
 
     @Query("SELECT * FROM intensity_records ORDER BY recordedAt DESC LIMIT 1")
