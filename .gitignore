@@ -20,4 +20,4 @@ local.properties
 Thumbs.db
 
 # Screenshots (Verzeichnis komplett ignoriert)
-screenshots/
+screenshots/*
