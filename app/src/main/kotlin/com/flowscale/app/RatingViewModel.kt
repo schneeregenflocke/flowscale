@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.Instant
@@ -21,6 +23,7 @@ private const val DEFAULT_WINDOW_MINUTES = 5
 private const val PREFS_NAME = "flowscale_prefs"
 private const val KEY_VOLUME_KEYS = "volume_keys_enabled"
 private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
+private const val DATABASE_NAME = "flowscale.db"
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -57,6 +60,31 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private val records = dao.getAll()
+
+    private val countFlow = dao.getCount()
+
+    val recordCount = countFlow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            initialValue = 0L,
+        )
+
+    val databaseSizeBytes: StateFlow<Long> = countFlow
+        .map { computeDatabaseSize() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            initialValue = computeDatabaseSize(),
+        )
+
+    private fun computeDatabaseSize(): Long {
+        val dbPath = getApplication<FlowScaleApplication>().getDatabasePath(DATABASE_NAME)
+        val mainSize = dbPath.length()
+        val walSize = File(dbPath.path + "-wal").length()
+        val shmSize = File(dbPath.path + "-shm").length()
+        return mainSize + walSize + shmSize
+    }
 
     val recentRecords = combine(records, _nowMillis, _windowMinutes) { allRecords, now, minutes ->
         val windowStart = now - minutes.toLong() * 60 * 1_000

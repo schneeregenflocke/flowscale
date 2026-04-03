@@ -2,6 +2,7 @@ package com.flowscale.app
 
 import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
@@ -29,17 +30,20 @@ class RatingScreenTest {
     }
 
     private fun launchScreen() {
+        composeTestRule.mainClock.autoAdvance = false
         composeTestRule.setContent {
             FlowScaleTheme {
                 RatingScreen(viewModel)
             }
         }
+        composeTestRule.mainClock.autoAdvance = true
+        composeTestRule.waitForIdle()
     }
 
     @Test
     fun initialValueIsZero() {
         launchScreen()
-        composeTestRule.onNodeWithText("0").assertExists()
+        composeTestRule.onNodeWithContentDescription("Aktuelle Intensität: 0").assertExists()
     }
 
     @Test
@@ -54,7 +58,7 @@ class RatingScreenTest {
         launchScreen()
         composeTestRule.onNodeWithText("+ 0.1").performClick()
         composeTestRule.onNodeWithText("− 0.1").performClick()
-        composeTestRule.onNodeWithText("0").assertExists()
+        composeTestRule.onNodeWithContentDescription("Aktuelle Intensität: 0").assertExists()
     }
 
     @Test

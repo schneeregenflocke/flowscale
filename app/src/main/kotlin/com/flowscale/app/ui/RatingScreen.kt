@@ -3,12 +3,16 @@ package com.flowscale.app.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -37,6 +41,8 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val recentRecords by viewModel.recentRecords.collectAsState()
     val windowMinutes by viewModel.windowMinutes.collectAsState()
     val nowMillis by viewModel.nowMillis.collectAsState()
+    val recordCount by viewModel.recordCount.collectAsState()
+    val databaseSizeBytes by viewModel.databaseSizeBytes.collectAsState()
 
     val stepLabel = formatRating(RatingViewModel.STEP)
 
@@ -134,7 +140,62 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
             currentIntensity = currentValue,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
+
+        Spacer(Modifier.height(16.dp))
+
+        StorageInfoRow(recordCount = recordCount, databaseSizeBytes = databaseSizeBytes)
     }
+}
+
+@Composable
+private fun StorageInfoRow(recordCount: Long, databaseSizeBytes: Long) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp)
+            .height(IntrinsicSize.Min),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "%,d".format(recordCount),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = "Werte",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        VerticalDivider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(horizontal = 24.dp),
+            color = MaterialTheme.colorScheme.outlineVariant,
+        )
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = formatStorageSize(databaseSizeBytes),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = "Speicher",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+private fun formatStorageSize(bytes: Long): String = when {
+    bytes < 1_024L -> "$bytes B"
+    bytes < 1_024L * 1_024 -> "%.1f KB".format(bytes / 1_024.0)
+    else -> "%.1f MB".format(bytes / (1_024.0 * 1_024))
 }
 
 private val WINDOW_OPTIONS = listOf(1, 5, 10, 30, 60, 120)
