@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FlowScale</string>
+    <string name="current_intensity_description">Aktuelle Intensität: %1$s</string>
+    <string name="decrease_intensity_description">Intensität um %1$s verringern</string>
+    <string name="increase_intensity_description">Intensität um %1$s erhöhen</string>
+    <string name="decrease_button">− %1$s</string>
+    <string name="increase_button">+ %1$s</string>
+    <string name="volume_keys_intensity">Lautstärketasten → Intensität</string>
+    <string name="volume_keys_volume">Lautstärketasten → Lautstärke</string>
+    <string name="screen_always_on">Bildschirm: immer an</string>
+    <string name="screen_auto">Bildschirm: auto</string>
+    <string name="time_window_label">Zeitfenster: %1$d min</string>
+    <string name="minutes_option">%1$d min</string>
+    <string name="record_count_label">Werte</string>
+    <string name="storage_label">Speicher</string>
+    <string name="chart_description">Intensitätsverlauf der letzten Messungen</string>
 </resources>

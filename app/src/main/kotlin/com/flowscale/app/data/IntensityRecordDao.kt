@@ -14,6 +14,16 @@ interface IntensityRecordDao {
     @Query("SELECT * FROM intensity_records ORDER BY recordedAt ASC")
     fun getAll(): Flow<List<IntensityRecord>>
 
+    @Query(
+        """
+        SELECT * FROM intensity_records
+        WHERE recordedAt >= :since
+           OR id = (SELECT id FROM intensity_records WHERE recordedAt < :since ORDER BY recordedAt DESC LIMIT 1)
+        ORDER BY recordedAt ASC
+        """,
+    )
+    fun getWindowedRecords(since: Long): Flow<List<IntensityRecord>>
+
     @Query("SELECT * FROM intensity_records ORDER BY recordedAt DESC LIMIT 1")
     suspend fun getLatest(): IntensityRecord?
 
