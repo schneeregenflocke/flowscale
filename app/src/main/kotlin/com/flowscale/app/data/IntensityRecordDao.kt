@@ -18,7 +18,7 @@ interface IntensityRecordDao {
         """
         SELECT * FROM intensity_records
         WHERE recordedAt >= :since
-           OR id = (SELECT id FROM intensity_records WHERE recordedAt < :since ORDER BY recordedAt DESC LIMIT 1)
+           OR id = (SELECT id FROM intensity_records WHERE recordedAt < :since ORDER BY recordedAt DESC, id DESC LIMIT 1)
         ORDER BY recordedAt ASC
         """,
     )
