@@ -10,9 +10,7 @@ class FlowScaleApplication : Application() {
         Room.databaseBuilder(
             this,
             AppDatabase::class.java,
-            "flowscale.db",
-        )
-            .fallbackToDestructiveMigration(dropAllTables = true)
-            .build()
+            AppDatabase.NAME,
+        ).build()
     }
 }

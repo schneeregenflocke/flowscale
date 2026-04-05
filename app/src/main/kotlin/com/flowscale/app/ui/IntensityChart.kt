@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextMeasurer
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.flowscale.app.R
 import com.flowscale.app.data.IntensityRecord
 
 private const val Y_MIN = 0.0
@@ -37,13 +39,14 @@ fun IntensityChart(
     val gridColor = MaterialTheme.colorScheme.outlineVariant
     val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
     val textMeasurer = rememberTextMeasurer()
+    val chartDescription = stringResource(R.string.chart_description)
 
     Canvas(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .semantics {
-                contentDescription = "Intensitätsverlauf der letzten Messungen"
+                contentDescription = chartDescription
             },
     ) {
         val windowStart = nowMillis - windowMillis

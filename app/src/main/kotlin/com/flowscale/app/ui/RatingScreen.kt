@@ -28,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.flowscale.app.R
 import com.flowscale.app.RatingViewModel
 
 @Composable
@@ -45,6 +47,9 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val databaseSizeBytes by viewModel.databaseSizeBytes.collectAsState()
 
     val stepLabel = formatRating(RatingViewModel.STEP)
+    val intensityDescription = stringResource(R.string.current_intensity_description, formatRating(currentValue))
+    val decreaseDescription = stringResource(R.string.decrease_intensity_description, stepLabel)
+    val increaseDescription = stringResource(R.string.increase_intensity_description, stepLabel)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -55,7 +60,7 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
             text = formatRating(currentValue),
             style = MaterialTheme.typography.displayLarge,
             modifier = Modifier.semantics {
-                contentDescription = "Aktuelle Intensität: ${formatRating(currentValue)}"
+                contentDescription = intensityDescription
             },
         )
 
@@ -66,18 +71,24 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
                 onClick = { viewModel.decrement() },
                 modifier = Modifier
                     .size(width = 96.dp, height = 56.dp)
-                    .semantics { contentDescription = "Intensität um $stepLabel verringern" },
+                    .semantics { contentDescription = decreaseDescription },
             ) {
-                Text("− $stepLabel", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.decrease_button, stepLabel),
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
 
             Button(
                 onClick = { viewModel.increment() },
                 modifier = Modifier
                     .size(width = 96.dp, height = 56.dp)
-                    .semantics { contentDescription = "Intensität um $stepLabel erhöhen" },
+                    .semantics { contentDescription = increaseDescription },
             ) {
-                Text("+ $stepLabel", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.increase_button, stepLabel),
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
         }
 
@@ -102,7 +113,13 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
                     },
                 ),
             ) {
-                Text(if (volumeKeysEnabled) "Lautstärketasten → Intensität" else "Lautstärketasten → Lautstärke")
+                Text(
+                    if (volumeKeysEnabled) {
+                        stringResource(R.string.volume_keys_intensity)
+                    } else {
+                        stringResource(R.string.volume_keys_volume)
+                    },
+                )
             }
 
             Button(
@@ -120,7 +137,13 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
                     },
                 ),
             ) {
-                Text(if (keepScreenOn) "Bildschirm: immer an" else "Bildschirm: auto")
+                Text(
+                    if (keepScreenOn) {
+                        stringResource(R.string.screen_always_on)
+                    } else {
+                        stringResource(R.string.screen_auto)
+                    },
+                )
             }
         }
 
@@ -164,7 +187,7 @@ private fun StorageInfoRow(recordCount: Long, databaseSizeBytes: Long) {
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "Werte",
+                text = stringResource(R.string.record_count_label),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -184,7 +207,7 @@ private fun StorageInfoRow(recordCount: Long, databaseSizeBytes: Long) {
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "Speicher",
+                text = stringResource(R.string.storage_label),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -209,12 +232,12 @@ private fun TimeWindowDropdown(
 
     Box {
         OutlinedButton(onClick = { expanded = true }) {
-            Text("Zeitfenster: $selectedMinutes min")
+            Text(stringResource(R.string.time_window_label, selectedMinutes))
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             WINDOW_OPTIONS.forEach { minutes ->
                 DropdownMenuItem(
-                    text = { Text("$minutes min") },
+                    text = { Text(stringResource(R.string.minutes_option, minutes)) },
                     onClick = {
                         onSelect(minutes)
                         expanded = false
