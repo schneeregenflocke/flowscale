@@ -12,4 +12,8 @@ import androidx.room.RoomDatabase
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun intensityRecordDao(): IntensityRecordDao
+
+    companion object {
+        const val NAME = "flowscale.db"
+    }
 }

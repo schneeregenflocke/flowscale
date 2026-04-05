@@ -5,12 +5,17 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,7 +28,6 @@ private const val DEFAULT_WINDOW_MINUTES = 5
 private const val PREFS_NAME = "flowscale_prefs"
 private const val KEY_VOLUME_KEYS = "volume_keys_enabled"
 private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
-private const val DATABASE_NAME = "flowscale.db"
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -56,10 +60,8 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     val windowMinutes: StateFlow<Int> = _windowMinutes
 
     fun setWindowMinutes(minutes: Int) {
-        _windowMinutes.value = minutes
+        if (minutes > 0) _windowMinutes.value = minutes
     }
-
-    private val records = dao.getAll()
 
     private val countFlow = dao.getCount()
 
@@ -72,23 +74,28 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
 
     val databaseSizeBytes: StateFlow<Long> = countFlow
         .map { computeDatabaseSize() }
+        .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            initialValue = computeDatabaseSize(),
+            initialValue = 0L,
         )
 
     private fun computeDatabaseSize(): Long {
-        val dbPath = getApplication<FlowScaleApplication>().getDatabasePath(DATABASE_NAME)
+        val dbPath = getApplication<FlowScaleApplication>().getDatabasePath(AppDatabase.NAME)
         val mainSize = dbPath.length()
         val walSize = File(dbPath.path + "-wal").length()
         val shmSize = File(dbPath.path + "-shm").length()
         return mainSize + walSize + shmSize
     }
 
-    val recentRecords = combine(records, _nowMillis, _windowMinutes) { allRecords, now, minutes ->
-        val windowStart = now - minutes.toLong() * 60 * 1_000
-        selectRecentRecords(allRecords, windowStart)
+    val recentRecords = combine(_nowMillis, _windowMinutes) { now, minutes ->
+        val windowMillis = minutes.toLong() * 60 * 1_000
+        // Round to 10s so the DB query only re-subscribes every ~10s, not every 1s tick
+        val windowStart = now - windowMillis
+        windowStart / 10_000 * 10_000
+    }.distinctUntilChanged().flatMapLatest { windowStart ->
+        dao.getWindowedRecords(windowStart)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
@@ -146,19 +153,5 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         const val STEP = 0.1
         const val MIN_VALUE = 0.0
         const val MAX_VALUE = 10.0
-    }
-}
-
-internal fun selectRecentRecords(
-    allRecords: List<IntensityRecord>,
-    windowStartMillis: Long,
-): List<IntensityRecord> {
-    val firstVisibleIndex = allRecords.indexOfFirst { it.recordedAt >= windowStartMillis }
-
-    return when {
-        firstVisibleIndex > 0 -> allRecords.subList(firstVisibleIndex - 1, allRecords.size)
-        firstVisibleIndex == 0 -> allRecords
-        allRecords.isNotEmpty() -> listOf(allRecords.last())
-        else -> emptyList()
     }
 }
