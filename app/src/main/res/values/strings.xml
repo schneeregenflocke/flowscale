@@ -15,4 +15,5 @@
     <string name="record_count_label">Werte</string>
     <string name="storage_label">Speicher</string>
     <string name="chart_description">Intensitätsverlauf der letzten Messungen</string>
+    <string name="export_csv_button">CSV exportieren</string>
 </resources>

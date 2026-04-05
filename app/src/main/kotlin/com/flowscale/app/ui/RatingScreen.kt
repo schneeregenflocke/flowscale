@@ -1,5 +1,7 @@
 package com.flowscale.app.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,12 +30,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.flowscale.app.R
 import com.flowscale.app.RatingViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
@@ -45,6 +50,15 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val nowMillis by viewModel.nowMillis.collectAsState()
     val recordCount by viewModel.recordCount.collectAsState()
     val databaseSizeBytes by viewModel.databaseSizeBytes.collectAsState()
+
+    val context = LocalContext.current
+    val csvLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/csv"),
+    ) { uri ->
+        if (uri != null) {
+            context.contentResolver.openOutputStream(uri)?.let { viewModel.exportCsv(it) }
+        }
+    }
 
     val stepLabel = formatRating(RatingViewModel.STEP)
     val intensityDescription = stringResource(R.string.current_intensity_description, formatRating(currentValue))
@@ -163,6 +177,17 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
             currentIntensity = currentValue,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
+
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = {
+                val date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                csvLauncher.launch("flowscale_$date.csv")
+            },
+        ) {
+            Text(stringResource(R.string.export_csv_button))
+        }
 
         Spacer(Modifier.height(16.dp))
 
