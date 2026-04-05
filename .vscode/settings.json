@@ -19,6 +19,7 @@
         "true": true,
         "type": true,
         "adb": true,
-        "sqlite3": true
+        "sqlite3": true,
+        "emulator": true
     }
 }
