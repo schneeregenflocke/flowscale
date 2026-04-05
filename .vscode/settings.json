@@ -21,5 +21,6 @@
         "adb": true,
         "sqlite3": true,
         "emulator": true
-    }
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
