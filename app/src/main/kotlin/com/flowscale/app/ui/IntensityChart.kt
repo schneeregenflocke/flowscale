@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -122,38 +124,29 @@ fun IntensityChart(
             return@Canvas
         }
 
-        // Build complete list of points for drawing
+        // Build complete list of points for drawing (including live point)
         val allPoints = buildList {
             leftEdgePoint?.let { add(it) }
             addAll(visible.map { Offset(xFor(it.recordedAt), yFor(it.intensity)) })
+            add(livePoint)
         }
 
-        // Draw lines between all points (including left edge → first visible)
+        // Draw monotone cubic spline through all points
+        if (allPoints.size >= 2) {
+            val path = monotoneCubicPath(allPoints)
+            drawPath(
+                path = path,
+                color = lineColor,
+                style = Stroke(width = 3f),
+            )
+        }
+
+        // Draw data points (excluding live point)
         for (i in 0 until allPoints.size - 1) {
-            drawLine(
-                color = lineColor,
-                start = allPoints[i],
-                end = allPoints[i + 1],
-                strokeWidth = 3f,
-            )
-        }
-
-        // Line from last point to live point
-        if (allPoints.isNotEmpty()) {
-            drawLine(
-                color = lineColor,
-                start = allPoints.last(),
-                end = livePoint,
-                strokeWidth = 3f,
-            )
-        }
-
-        // Draw all points
-        for (point in allPoints) {
             drawCircle(
                 color = pointColor,
                 radius = POINT_RADIUS,
-                center = point,
+                center = allPoints[i],
             )
         }
 
@@ -195,4 +188,72 @@ private fun DrawScope.drawGridLines(
             topLeft = Offset(paddingLeft - measured.size.width - 4f, y - measured.size.height / 2f),
         )
     }
+}
+
+/**
+ * Fritsch-Carlson monotone cubic interpolation.
+ * Builds a [Path] with cubic Bézier segments that pass through every point
+ * while preserving monotonicity between consecutive points (no overshoot).
+ */
+private fun monotoneCubicPath(points: List<Offset>): Path {
+    val n = points.size
+    if (n < 2) return Path()
+
+    val path = Path()
+    path.moveTo(points[0].x, points[0].y)
+
+    if (n == 2) {
+        path.lineTo(points[1].x, points[1].y)
+        return path
+    }
+
+    // Step 1: compute slopes of secant lines (delta)
+    val dx = FloatArray(n - 1) { i -> points[i + 1].x - points[i].x }
+    val dy = FloatArray(n - 1) { i -> points[i + 1].y - points[i].y }
+    val delta = FloatArray(n - 1) { i ->
+        if (dx[i] != 0f) dy[i] / dx[i] else 0f
+    }
+
+    // Step 2: initial tangent estimates
+    val m = FloatArray(n)
+    m[0] = delta[0]
+    m[n - 1] = delta[n - 2]
+    for (i in 1 until n - 1) {
+        if (delta[i - 1] * delta[i] <= 0f) {
+            // Sign change or zero → flat tangent to prevent overshoot
+            m[i] = 0f
+        } else {
+            m[i] = (delta[i - 1] + delta[i]) / 2f
+        }
+    }
+
+    // Step 3: Fritsch-Carlson correction to ensure monotonicity
+    for (i in 0 until n - 1) {
+        if (delta[i] == 0f) {
+            m[i] = 0f
+            m[i + 1] = 0f
+        } else {
+            val alpha = m[i] / delta[i]
+            val beta = m[i + 1] / delta[i]
+            // Restrict to circle of radius 3 to guarantee monotonicity
+            val tau = alpha * alpha + beta * beta
+            if (tau > 9f) {
+                val s = 3f / kotlin.math.sqrt(tau)
+                m[i] = s * alpha * delta[i]
+                m[i + 1] = s * beta * delta[i]
+            }
+        }
+    }
+
+    // Step 4: build cubic Bézier segments from Hermite tangents
+    for (i in 0 until n - 1) {
+        val segDx = dx[i] / 3f
+        path.cubicTo(
+            points[i].x + segDx, points[i].y + m[i] * segDx,
+            points[i + 1].x - segDx, points[i + 1].y - m[i + 1] * segDx,
+            points[i + 1].x, points[i + 1].y,
+        )
+    }
+
+    return path
 }
