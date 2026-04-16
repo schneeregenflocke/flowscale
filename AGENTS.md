@@ -1,4 +1,4 @@
-# FlowScale
+# Flowscale
 
 Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).
 
