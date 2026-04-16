@@ -8,7 +8,19 @@
       "Read(//tmp/aboutlibs-inspect/aboutlibraries-compose-m3/src/androidMain/kotlin/com/mikepenz/aboutlibraries/ui/compose/m3/**)",
       "Read(//tmp/aboutlibs-inspect/aboutlibraries-compose/src/androidMain/kotlin/com/mikepenz/aboutlibraries/ui/compose/**)",
       "Read(//tmp/aboutlibs-inspect/**)",
-      "Bash(./gradlew :app:exportLibraryDefinitions)"
+      "Bash(./gradlew :app:exportLibraryDefinitions)",
+      "Bash(JAVA_HOME=/usr/lib/jvm/java-21-openjdk ./gradlew :app:help -q --no-configuration-cache)",
+      "Read(//usr/lib/jvm/**)",
+      "Bash(archlinux-java status *)",
+      "Bash(gh release *)",
+      "WebFetch(domain:plugins.gradle.org)",
+      "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:licenseeRelease)",
+      "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:spdxSbomForRelease)",
+      "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:licenseeRelease :app:spdxSbomForRelease :app:assembleDebug)",
+      "Bash(adb devices *)",
+      "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:connectedDebugAndroidTest)",
+      "Bash(./gradlew lintDebug)",
+      "Bash(./gradlew :app:compileDebugKotlin)"
     ],
     "additionalDirectories": [
       "/tmp/aboutlibs-inspect"

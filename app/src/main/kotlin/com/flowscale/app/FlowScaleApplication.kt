@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.flowscale.app.data.AppDatabase
 
-class FlowScaleApplication : Application() {
+class FlowscaleApplication : Application() {
 
     val database: AppDatabase by lazy {
         Room.databaseBuilder(

@@ -1,16 +1,17 @@
 # Flowscale
 
+[![CI](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/schneeregenflocke/flowscale)](LICENSE)
+
 > **Hinweis:** Diese App wird per Vibe Coding entwickelt.
 
 Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).  
 
 ## Screenshots
 
-<!-- TODO: Screenshots einfügen, z. B.:
-<p>
-  <img src="screenshots/main.png" width="240" alt="Hauptansicht" />
-  <img src="screenshots/chart.png" width="240" alt="Intensitätsverlauf" />
-</p> -->
+<p align="center">
+  <img src="docs/screenshots/main-screen.png" alt="Flowscale Hauptbildschirm mit Intensitätswert, Plus/Minus-Tasten, Einstellungen und Verlaufsgraph" width="320">
+</p>
 
 ## Funktionen
 
@@ -67,6 +68,6 @@ Manueller Export der Definitionen:
 
 ## Lizenz
 
-FlowScale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
+Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
 
 Siehe auch [NOTICE](NOTICE) für Hinweise zu Drittanbieter-Lizenzen.

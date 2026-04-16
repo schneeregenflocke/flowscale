@@ -14,7 +14,7 @@ private val LightColorScheme = lightColorScheme()
 private val DarkColorScheme = darkColorScheme()
 
 @Composable
-fun FlowScaleTheme(
+fun FlowscaleTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

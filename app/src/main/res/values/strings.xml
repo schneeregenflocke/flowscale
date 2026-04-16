@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FlowScale</string>
+    <string name="app_name">Flowscale</string>
     <string name="current_intensity_description">Aktuelle Intensität: %1$s</string>
     <string name="decrease_intensity_description">Intensität um %1$s verringern</string>
     <string name="increase_intensity_description">Intensität um %1$s erhöhen</string>
@@ -18,7 +18,7 @@
     <string name="export_csv_button">CSV exportieren</string>
     <string name="app_description">Kontinuierliche visuelle NRS/PROM-Skala für Android</string>
     <string name="info_button_description">App-Info öffnen</string>
-    <string name="about_title">Über FlowScale</string>
+    <string name="about_title">Über Flowscale</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_repo_label">Quellcode auf GitHub</string>
     <string name="about_repo_url">https://github.com/schneeregenflocke/flowscale</string>

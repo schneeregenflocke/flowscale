@@ -3,10 +3,12 @@ package com.flowscale.app
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,7 @@ private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val dao = getApplication<FlowScaleApplication>().database.intensityRecordDao()
+    private val dao = getApplication<FlowscaleApplication>().database.intensityRecordDao()
     private val prefs = application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     private val _currentValue = MutableStateFlow(0.0)
@@ -85,13 +87,14 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         )
 
     private fun computeDatabaseSize(): Long {
-        val dbPath = getApplication<FlowScaleApplication>().getDatabasePath(AppDatabase.NAME)
+        val dbPath = getApplication<FlowscaleApplication>().getDatabasePath(AppDatabase.NAME)
         val mainSize = dbPath.length()
         val walSize = File(dbPath.path + "-wal").length()
         val shmSize = File(dbPath.path + "-shm").length()
         return mainSize + walSize + shmSize
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val recentRecords = combine(_nowMillis, _windowMinutes) { now, minutes ->
         val windowMillis = minutes.toLong() * 60 * 1_000
         // Round to 10s so the DB query only re-subscribes every ~10s, not every 1s tick
@@ -114,13 +117,13 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     fun toggleVolumeKeys() {
         val newValue = !_volumeKeysEnabled.value
         _volumeKeysEnabled.value = newValue
-        prefs.edit().putBoolean(KEY_VOLUME_KEYS, newValue).apply()
+        prefs.edit { putBoolean(KEY_VOLUME_KEYS, newValue) }
     }
 
     fun toggleKeepScreenOn() {
         val newValue = !_keepScreenOn.value
         _keepScreenOn.value = newValue
-        prefs.edit().putBoolean(KEY_KEEP_SCREEN_ON, newValue).apply()
+        prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, newValue) }
     }
 
     fun increment() {

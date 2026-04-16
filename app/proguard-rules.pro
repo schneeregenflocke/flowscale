@@ -1,4 +1,4 @@
-# FlowScale ProGuard/R8 rules
+# Flowscale ProGuard/R8 rules
 
 # Room – keep generated Dao implementations
 -keep class * extends androidx.room.RoomDatabase
