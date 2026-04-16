@@ -1,5 +1,7 @@
 # FlowScale
 
+> **Hinweis:** Diese App wird per Vibe Coding entwickelt.
+
 Kontinuierliche visuelle NRS/PROM-Skala für Android — eine minimale App, mit der selbstberichtete Intensitätswerte (Numeric Rating Scale / Patient-Reported Outcome Measure) über die Zeit erfasst und exportiert werden können.
 
 ## Screenshots
