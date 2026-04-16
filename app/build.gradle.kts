@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.aboutlibraries)
 }
 
 android {
@@ -35,6 +36,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     room {
@@ -42,15 +44,23 @@ android {
     }
 }
 
+aboutLibraries {
+    export {
+        prettyPrint = true
+    }
+}
+
 dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
+    implementation(libs.aboutlibraries.compose.m3)
 
     testImplementation(libs.junit)
 

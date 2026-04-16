@@ -27,6 +27,9 @@ interface IntensityRecordDao {
     @Query("SELECT * FROM intensity_records ORDER BY recordedAt DESC LIMIT 1")
     suspend fun getLatest(): IntensityRecord?
 
+    @Query("SELECT * FROM intensity_records ORDER BY recordedAt ASC")
+    suspend fun getAllOnce(): List<IntensityRecord>
+
     @Query("SELECT COUNT(*) FROM intensity_records")
     fun getCount(): Flow<Long>
 }

@@ -1,5 +1,7 @@
 package com.flowscale.app.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,13 +12,18 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -28,12 +35,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.flowscale.app.R
 import com.flowscale.app.RatingViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
@@ -46,15 +56,28 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val recordCount by viewModel.recordCount.collectAsState()
     val databaseSizeBytes by viewModel.databaseSizeBytes.collectAsState()
 
+    val context = LocalContext.current
+    val csvLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/csv"),
+    ) { uri ->
+        if (uri != null) {
+            context.contentResolver.openOutputStream(uri)?.let { viewModel.exportCsv(it) }
+        }
+    }
+
     val stepLabel = formatRating(RatingViewModel.STEP)
     val intensityDescription = stringResource(R.string.current_intensity_description, formatRating(currentValue))
     val decreaseDescription = stringResource(R.string.decrease_intensity_description, stepLabel)
     val increaseDescription = stringResource(R.string.increase_intensity_description, stepLabel)
 
+    var showAbout by remember { mutableStateOf(false) }
+    var showLicenses by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier.fillMaxSize()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
     ) {
         Text(
             text = formatRating(currentValue),
@@ -166,7 +189,46 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
 
         Spacer(Modifier.height(16.dp))
 
+        OutlinedButton(
+            onClick = {
+                val date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                csvLauncher.launch("flowscale_$date.csv")
+            },
+        ) {
+            Text(stringResource(R.string.export_csv_button))
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         StorageInfoRow(recordCount = recordCount, databaseSizeBytes = databaseSizeBytes)
+    }
+
+        IconButton(
+            onClick = { showAbout = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(16.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = stringResource(R.string.info_button_description),
+            )
+        }
+    }
+
+    if (showAbout) {
+        AboutBottomSheet(
+            onDismiss = { showAbout = false },
+            onOpenLicenses = {
+                showAbout = false
+                showLicenses = true
+            },
+        )
+    }
+
+    if (showLicenses) {
+        LicensesDialog(onDismiss = { showLicenses = false })
     }
 }
 

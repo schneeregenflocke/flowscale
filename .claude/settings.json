@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /home/titan99/code/flowscale config user.name)",
+      "Bash(git -C /home/titan99/code/flowscale config user.email)",
+      "Bash(gitleaks version *)",
+      "Bash(git -C /home/titan99/code/flowscale config user.name \"Marco Peyer\")",
+      "Read(//tmp/aboutlibs-inspect/aboutlibraries-compose-m3/src/androidMain/kotlin/com/mikepenz/aboutlibraries/ui/compose/m3/**)",
+      "Read(//tmp/aboutlibs-inspect/aboutlibraries-compose/src/androidMain/kotlin/com/mikepenz/aboutlibraries/ui/compose/**)",
+      "Read(//tmp/aboutlibs-inspect/**)",
+      "Bash(./gradlew :app:exportLibraryDefinitions)"
+    ],
+    "additionalDirectories": [
+      "/tmp/aboutlibs-inspect"
+    ]
+  }
+}

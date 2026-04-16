@@ -6,8 +6,8 @@
     <string name="increase_intensity_description">Intensität um %1$s erhöhen</string>
     <string name="decrease_button">− %1$s</string>
     <string name="increase_button">+ %1$s</string>
-    <string name="volume_keys_intensity">Lautstärketasten → Intensität</string>
-    <string name="volume_keys_volume">Lautstärketasten → Lautstärke</string>
+    <string name="volume_keys_intensity">Lautstärketasten: Intensität</string>
+    <string name="volume_keys_volume">Lautstärketasten: Lautstärke</string>
     <string name="screen_always_on">Bildschirm: immer an</string>
     <string name="screen_auto">Bildschirm: auto</string>
     <string name="time_window_label">Zeitfenster: %1$d min</string>
@@ -15,4 +15,15 @@
     <string name="record_count_label">Werte</string>
     <string name="storage_label">Speicher</string>
     <string name="chart_description">Intensitätsverlauf der letzten Messungen</string>
+    <string name="export_csv_button">CSV exportieren</string>
+    <string name="app_description">Kontinuierliche visuelle NRS/PROM-Skala für Android</string>
+    <string name="info_button_description">App-Info öffnen</string>
+    <string name="about_title">Über FlowScale</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_repo_label">Quellcode auf GitHub</string>
+    <string name="about_repo_url">https://github.com/schneeregenflocke/flowscale</string>
+    <string name="about_license_label">Lizenz: MIT</string>
+    <string name="about_licenses_button">Open-Source-Lizenzen</string>
+    <string name="licenses_title">Open-Source-Lizenzen</string>
+    <string name="close_description">Schliessen</string>
 </resources>

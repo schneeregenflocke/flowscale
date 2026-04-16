@@ -20,6 +20,8 @@
         "type": true,
         "adb": true,
         "sqlite3": true,
-        "emulator": true
-    }
+        "emulator": true,
+        "git fetch": true
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

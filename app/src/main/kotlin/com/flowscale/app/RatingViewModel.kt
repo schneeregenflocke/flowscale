@@ -20,9 +20,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.OutputStream
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private const val DEFAULT_WINDOW_MINUTES = 5
 private const val PREFS_NAME = "flowscale_prefs"
@@ -145,6 +148,27 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
                 dao.insert(IntensityRecord(intensity = value))
             } catch (e: Exception) {
                 Log.e("RatingViewModel", "Failed to insert intensity record", e)
+            }
+        }
+    }
+
+    fun exportCsv(outputStream: OutputStream) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val records = dao.getAllOnce()
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                    .withZone(ZoneId.systemDefault())
+                outputStream.bufferedWriter().use { writer ->
+                    writer.write("Datum/Uhrzeit (ISO 8601);Intensität")
+                    writer.newLine()
+                    for (record in records) {
+                        val timestamp = formatter.format(Instant.ofEpochMilli(record.recordedAt))
+                        writer.write("$timestamp;${record.intensity}")
+                        writer.newLine()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("RatingViewModel", "CSV export failed", e)
             }
         }
     }
