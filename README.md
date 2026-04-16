@@ -1,6 +1,6 @@
 # FlowScale
 
-Kontinuierliche visuelle NRS/PROM-Skala für Android — eine minimale App, mit der Patient:innen selbstberichtete Intensitätswerte (Numeric Rating Scale / Patient-Reported Outcome Measure) über die Zeit erfassen und exportieren können.
+Kontinuierliche visuelle NRS/PROM-Skala für Android — eine minimale App, mit der selbstberichtete Intensitätswerte (Numeric Rating Scale / Patient-Reported Outcome Measure) über die Zeit erfasst und exportiert werden können.
 
 ## Screenshots
 
