@@ -58,34 +58,26 @@ sdk.dir=/home/<user>/Android/Sdk
 
 ## Build
 
-```sh
-./gradlew assembleDebug
-```
+`./gradlew assembleDebug`
 
 ## Tests
 
-```sh
 # Unit-Tests (kein Gerät nötig)
-./gradlew testDebugUnitTest
+`./gradlew testDebugUnitTest`
 
 # Instrumentierungstests (Gerät/Emulator muss verbunden sein)
-./gradlew connectedDebugAndroidTest
-```
+`./gradlew connectedDebugAndroidTest`
 
 ## Emulator starten
 
-```sh
-QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd FlowScale -gpu auto &
-```
+`QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd FlowScale -gpu auto &`
 
 `QT_QPA_PLATFORM=xcb` ist nötig, weil der Android-Emulator kein Wayland-Qt-Plugin mitbringt und über XWayland laufen muss.
 
 Warten bis gebootet, dann App installieren und starten:
 
-```sh
-adb install app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n com.flowscale.app/.MainActivity
-```
+`adb install app/build/outputs/apk/debug/app-debug.apk`
+`adb shell am start -n com.flowscale.app/.MainActivity`
 
 ## Physisches Gerät
 
