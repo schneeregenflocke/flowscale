@@ -9,11 +9,9 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 
 ## Screenshots
 
-<!-- TODO: Screenshots einfügen, z. B.:
-<p>
-  <img src="screenshots/main.png" width="240" alt="Hauptansicht" />
-  <img src="screenshots/chart.png" width="240" alt="Intensitätsverlauf" />
-</p> -->
+<p align="center">
+  <img src="docs/screenshots/main-screen.png" alt="Flowscale Hauptbildschirm mit Intensitätswert, Plus/Minus-Tasten, Einstellungen und Verlaufsgraph" width="320">
+</p>
 
 ## Funktionen
 
