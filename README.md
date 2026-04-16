@@ -1,5 +1,8 @@
 # Flowscale
 
+[![CI](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/schneeregenflocke/flowscale)](LICENSE)
+
 > **Hinweis:** Diese App wird per Vibe Coding entwickelt.
 
 Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).  

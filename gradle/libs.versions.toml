@@ -7,6 +7,8 @@ activityCompose = "1.10.1"
 lifecycle = "2.9.1"
 room = "2.8.4"
 aboutlibraries = "14.0.1"
+licensee = "1.14.1"
+spdxSbom = "0.10.0"
 
 [libraries]
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -34,3 +36,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+licensee = { id = "app.cash.licensee", version.ref = "licensee" }
+spdx-sbom = { id = "org.spdx.sbom", version.ref = "spdxSbom" }

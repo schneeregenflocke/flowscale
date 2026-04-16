@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options: [minor, major]
+        default: minor
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Bump version in gradle.properties
+        id: bump
+        run: |
+          set -euo pipefail
+          major=$(grep -E '^versionMajor=' gradle.properties | cut -d= -f2)
+          minor=$(grep -E '^versionMinor=' gradle.properties | cut -d= -f2)
+          case "${{ inputs.bump }}" in
+            major)
+              major=$((major + 1))
+              minor=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              ;;
+          esac
+          sed -i "s/^versionMajor=.*/versionMajor=${major}/" gradle.properties
+          sed -i "s/^versionMinor=.*/versionMinor=${minor}/" gradle.properties
+          version="${major}.${minor}.0"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit version bump
+        env:
+          TAG: ${{ steps.bump.outputs.tag }}
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gradle.properties
+          git commit -m "chore: bump version to ${VERSION}"
+          git tag "${TAG}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"
+          git push origin "${TAG}"
+
+      - name: Build release APK and SBOM
+        run: ./gradlew :app:assembleRelease :app:spdxSbomForRelease
+
+      - name: Stage release assets
+        id: assets
+        env:
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          cp app/build/outputs/apk/release/app-release-unsigned.apk \
+             "release-assets/flowscale-${TAG}-unsigned.apk"
+          cp build/reports/spdx/flowscale.spdx.json \
+             "release-assets/flowscale-${TAG}.spdx.json"
+          ls -la release-assets
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          name: ${{ steps.bump.outputs.tag }}
+          body: |
+            Automated release for ${{ steps.bump.outputs.tag }}.
+
+            **APK ist unsigniert**, Signierung folgt in einem späteren Release.
+
+            Assets:
+            - `flowscale-${{ steps.bump.outputs.tag }}-unsigned.apk`
+            - `flowscale-${{ steps.bump.outputs.tag }}.spdx.json`
+          files: release-assets/*
+          fail_on_unmatched_files: true
