@@ -15,7 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.flowscale.app.ui.RatingScreen
-import com.flowscale.app.ui.theme.FlowScaleTheme
+import com.flowscale.app.ui.theme.FlowscaleTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            FlowScaleTheme {
+            FlowscaleTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

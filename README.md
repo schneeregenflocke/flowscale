@@ -70,6 +70,6 @@ Manueller Export der Definitionen:
 
 ## Lizenz
 
-FlowScale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
+Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
 
 Siehe auch [NOTICE](NOTICE) für Hinweise zu Drittanbieter-Lizenzen.

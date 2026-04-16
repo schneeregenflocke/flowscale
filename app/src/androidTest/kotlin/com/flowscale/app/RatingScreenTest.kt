@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.flowscale.app.ui.RatingScreen
 import com.flowscale.app.ui.formatRating
-import com.flowscale.app.ui.theme.FlowScaleTheme
+import com.flowscale.app.ui.theme.FlowscaleTheme
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -27,7 +27,7 @@ class RatingScreenTest {
     @Before
     fun setUp() {
         val app = InstrumentationRegistry.getInstrumentation()
-            .targetContext.applicationContext as FlowScaleApplication
+            .targetContext.applicationContext as FlowscaleApplication
         context = app
         runBlocking { app.database.clearAllTables() }
         app.getSharedPreferences("flowscale_prefs", Context.MODE_PRIVATE).edit().clear().commit()
@@ -37,7 +37,7 @@ class RatingScreenTest {
     private fun launchScreen() {
         composeTestRule.mainClock.autoAdvance = false
         composeTestRule.setContent {
-            FlowScaleTheme {
+            FlowscaleTheme {
                 RatingScreen(viewModel)
             }
         }

@@ -36,7 +36,7 @@ private const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
 
 class RatingViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val dao = getApplication<FlowScaleApplication>().database.intensityRecordDao()
+    private val dao = getApplication<FlowscaleApplication>().database.intensityRecordDao()
     private val prefs = application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     private val _currentValue = MutableStateFlow(0.0)
@@ -87,7 +87,7 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         )
 
     private fun computeDatabaseSize(): Long {
-        val dbPath = getApplication<FlowScaleApplication>().getDatabasePath(AppDatabase.NAME)
+        val dbPath = getApplication<FlowscaleApplication>().getDatabasePath(AppDatabase.NAME)
         val mainSize = dbPath.length()
         val walSize = File(dbPath.path + "-wal").length()
         val shmSize = File(dbPath.path + "-shm").length()

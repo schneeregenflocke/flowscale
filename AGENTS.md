@@ -7,7 +7,7 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 - Native Android (Kotlin, Jetpack Compose)
 - AGP 9.1 mit Built-in Kotlin (kein separates `kotlin-android` Plugin)
 - Compose Compiler Plugin (`kotlin-compose`) wird separat angewendet
-- `FlowScaleApplication` hält die Room-Datenbank als Singleton; ViewModels greifen über `getApplication<FlowScaleApplication>().database` darauf zu
+- `FlowscaleApplication` hält die Room-Datenbank als Singleton; ViewModels greifen über `getApplication<FlowscaleApplication>().database` darauf zu
 - iOS-Portierung soll langfristig möglich bleiben (KMP als Option)
 - Min SDK 26, Target/Compile SDK 36
 
@@ -70,7 +70,7 @@ sdk.dir=/home/<user>/Android/Sdk
 
 ## Emulator starten
 
-`QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd FlowScale -gpu auto &`
+`QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd Flowscale -gpu auto &`
 
 `QT_QPA_PLATFORM=xcb` ist nötig, weil der Android-Emulator kein Wayland-Qt-Plugin mitbringt und über XWayland laufen muss.
 

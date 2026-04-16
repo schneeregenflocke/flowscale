@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FlowScale"
+rootProject.name = "Flowscale"
 include(":app")
