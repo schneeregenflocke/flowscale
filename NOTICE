@@ -1,0 +1,12 @@
+FlowScale
+Copyright (c) 2026 Marco Peyer
+
+This product includes software developed by third parties, distributed under
+their respective licenses. A complete, up-to-date list of bundled dependencies
+and their licenses is available from within the app:
+
+    Info (bottom-right) → Open-Source-Lizenzen
+
+The list is generated at build time by the AboutLibraries Gradle plugin
+(https://github.com/mikepenz/AboutLibraries) from the project's dependency
+graph and shipped with the APK as a raw resource.

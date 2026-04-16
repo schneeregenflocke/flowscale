@@ -14,11 +14,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -65,10 +69,14 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
     val decreaseDescription = stringResource(R.string.decrease_intensity_description, stepLabel)
     val increaseDescription = stringResource(R.string.increase_intensity_description, stepLabel)
 
+    var showAbout by remember { mutableStateOf(false) }
+    var showLicenses by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier.fillMaxSize()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
     ) {
         Text(
             text = formatRating(currentValue),
@@ -192,6 +200,33 @@ fun RatingScreen(viewModel: RatingViewModel, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(16.dp))
 
         StorageInfoRow(recordCount = recordCount, databaseSizeBytes = databaseSizeBytes)
+    }
+
+        IconButton(
+            onClick = { showAbout = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = stringResource(R.string.info_button_description),
+            )
+        }
+    }
+
+    if (showAbout) {
+        AboutBottomSheet(
+            onDismiss = { showAbout = false },
+            onOpenLicenses = {
+                showAbout = false
+                showLicenses = true
+            },
+        )
+    }
+
+    if (showLicenses) {
+        LicensesDialog(onDismiss = { showLicenses = false })
     }
 }
 

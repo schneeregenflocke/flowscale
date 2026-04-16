@@ -12,6 +12,14 @@ local.properties
 *.ap_
 *.dex
 
+# Secrets / signing
+*.jks
+*.keystore
+keystore.properties
+google-services.json
+.env
+.env.*
+
 # Kotlin
 *.class
 
