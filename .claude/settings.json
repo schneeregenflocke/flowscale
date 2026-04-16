@@ -19,7 +19,8 @@
       "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:licenseeRelease :app:spdxSbomForRelease :app:assembleDebug)",
       "Bash(adb devices *)",
       "Bash(JAVA_HOME=/opt/android-studio/jbr ./gradlew :app:connectedDebugAndroidTest)",
-      "Bash(./gradlew lintDebug)"
+      "Bash(./gradlew lintDebug)",
+      "Bash(./gradlew :app:compileDebugKotlin)"
     ],
     "additionalDirectories": [
       "/tmp/aboutlibs-inspect"

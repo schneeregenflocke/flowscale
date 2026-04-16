@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.flowscale.app.data.AppDatabase
 import com.flowscale.app.data.IntensityRecord
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,6 +94,7 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
         return mainSize + walSize + shmSize
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val recentRecords = combine(_nowMillis, _windowMinutes) { now, minutes ->
         val windowMillis = minutes.toLong() * 60 * 1_000
         // Round to 10s so the DB query only re-subscribes every ~10s, not every 1s tick
