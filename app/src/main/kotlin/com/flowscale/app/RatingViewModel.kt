@@ -3,6 +3,7 @@ package com.flowscale.app
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.flowscale.app.data.AppDatabase
@@ -114,13 +115,13 @@ class RatingViewModel(application: Application) : AndroidViewModel(application) 
     fun toggleVolumeKeys() {
         val newValue = !_volumeKeysEnabled.value
         _volumeKeysEnabled.value = newValue
-        prefs.edit().putBoolean(KEY_VOLUME_KEYS, newValue).apply()
+        prefs.edit { putBoolean(KEY_VOLUME_KEYS, newValue) }
     }
 
     fun toggleKeepScreenOn() {
         val newValue = !_keepScreenOn.value
         _keepScreenOn.value = newValue
-        prefs.edit().putBoolean(KEY_KEEP_SCREEN_ON, newValue).apply()
+        prefs.edit { putBoolean(KEY_KEEP_SCREEN_ON, newValue) }
     }
 
     fun increment() {
