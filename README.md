@@ -23,11 +23,11 @@ Kontinuierliche visuelle NRS/PROM-Skala für Android — eine minimale App, mit 
 
 ### Voraussetzungen
 
-| Tool           | Version        | Hinweis                                   |
-| -------------- | -------------- | ----------------------------------------- |
-| JDK            | 17–21          | JDK 26 (Arch-Default) wird nicht unterstützt |
-| Android SDK    | Platform 36    | Build-Tools passend zum SDK               |
-| Gradle-Wrapper | mitgeliefert   | `./gradlew`                               |
+| Tool           | Version      | Hinweis                                      |
+| -------------- | ------------ | -------------------------------------------- |
+| JDK            | 17–21        | JDK 26 (Arch-Default) wird nicht unterstützt |
+| Android SDK    | Platform 36  | Build-Tools passend zum SDK                  |
+| Gradle-Wrapper | mitgeliefert | `./gradlew`                                  |
 
 Android Gradle Plugin 9.1 ist für JDK 17–21 freigegeben. Setze `JAVA_HOME` entsprechend:
 
