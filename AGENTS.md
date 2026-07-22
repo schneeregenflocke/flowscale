@@ -19,10 +19,8 @@ Alle Build-Abhängigkeiten lassen sich über `pacman` installieren:
 sudo pacman -S jdk21-openjdk android-tools
 ```
 
-| Paket           | Zweck                                    |
-| --------------- | ---------------------------------------- |
-| `jdk21-openjdk` | JDK 21 — Gradle nutzt es zum Kompilieren |
-| `android-tools` | `adb`, `fastboot` — Deploy auf Geräte    |
+- `jdk21-openjdk` — JDK 21, Gradle nutzt es zum Kompilieren
+- `android-tools` — `adb`, `fastboot` für den Deploy auf Geräte
 
 Das Android SDK (Build-Tools, Plattformen) wird separat unter `~/Android/Sdk` verwaltet (Commandline-Tools oder Android Studio).
 
@@ -39,10 +37,10 @@ Das `kotlin`-Paket aus pacman ist **nicht nötig** — der Kotlin-Compiler ist i
 
 ## Umgebungsvariablen
 
-| Variable       | Wert                           | Zweck                                                                                                  |
-| -------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `ANDROID_HOME` | `~/Android/Sdk`                | Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle findet darüber alle SDK-Komponenten. |
-| `JAVA_HOME`    | `/usr/lib/jvm/java-21-openjdk` | JDK 21 (via `pacman -S jdk21-openjdk`). Gradle nutzt es zum Kompilieren.                               |
+- `ANDROID_HOME` — `~/Android/Sdk`: Pfad zum Android SDK (Build-Tools, Plattformen,
+  Emulator). Gradle findet darüber alle SDK-Komponenten.
+- `JAVA_HOME` — `/usr/lib/jvm/java-21-openjdk`: JDK 21 (via `pacman -S jdk21-openjdk`).
+  Gradle nutzt es zum Kompilieren.
 
 Dauerhaft in `~/.zshenv` setzen:
 

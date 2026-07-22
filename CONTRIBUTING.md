@@ -23,12 +23,11 @@ Die aktiven Hooks sind in [.pre-commit-config.yaml](.pre-commit-config.yaml) gep
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml) läuft auf `push` nach `main` und auf jedem `pull_request` gegen `main`. Gebrochen wird der Build bei:
 
-| Check | Gradle-Task | Bricht bei |
-|---|---|---|
-| Lizenz-Allowlist | `:app:licenseeRelease` | Dependency mit nicht-erlaubter oder fehlender SPDX-Lizenz |
-| Lint | `:app:lintDebug` | Lint-Error-Level-Befund |
-| Unit-Tests | `:app:testDebugUnitTest` | Test-Failure |
-| Debug-APK | `:app:assembleDebug` | Compile-/Packaging-Fehler |
+- Lizenz-Allowlist (`:app:licenseeRelease`) — bricht bei einer Dependency mit
+  nicht-erlaubter oder fehlender SPDX-Lizenz
+- Lint (`:app:lintDebug`) — bricht bei einem Befund auf Error-Level
+- Unit-Tests (`:app:testDebugUnitTest`) — bricht bei einem Test-Failure
+- Debug-APK (`:app:assembleDebug`) — bricht bei Compile- oder Packaging-Fehlern
 
 Die erlaubten SPDX-Identifier sind im `licensee { }`-Block in [app/build.gradle.kts](app/build.gradle.kts) aufgeführt: `Apache-2.0`, `MIT`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `CC0-1.0`, `EPL-2.0`.
 
