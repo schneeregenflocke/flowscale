@@ -60,10 +60,12 @@ sdk.dir=/home/<user>/Android/Sdk
 
 ## Tests
 
-# Unit-Tests (kein Gerät nötig)
+### Unit-Tests (kein Gerät nötig)
+
 `./gradlew testDebugUnitTest`
 
-# Instrumentierungstests (Gerät/Emulator muss verbunden sein)
+### Instrumentierungstests (Gerät/Emulator muss verbunden sein)
+
 `./gradlew connectedDebugAndroidTest`
 
 ## Emulator starten
