@@ -152,11 +152,6 @@ Mögliche nächste Ziele (grobe Reihenfolge):
 1. **Export** — Daten als CSV/JSON exportieren
 2. **Einstellungen** — Schrittweite, Wertebereich, Sprache konfigurierbar machen
 
-## Offene TODOs
-
-- ~~R8/ProGuard für Release aktivieren (`isMinifyEnabled = true` + `proguard-rules.pro`), bevor die App veröffentlicht wird~~ ✅
-- ~~Launcher-Icon (`android:icon` / `android:roundIcon`) im Manifest und als Ressource anlegen~~ ✅
-
 ## Konventionen
 
 - Sprache im Code und in Commits: Englisch
