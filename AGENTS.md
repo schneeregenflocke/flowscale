@@ -37,10 +37,8 @@ Das `kotlin`-Paket aus pacman ist **nicht nötig** — der Kotlin-Compiler ist i
 
 ## Umgebungsvariablen
 
-- `ANDROID_HOME` — `~/Android/Sdk`: Pfad zum Android SDK (Build-Tools, Plattformen,
-  Emulator). Gradle findet darüber alle SDK-Komponenten.
-- `JAVA_HOME` — `/usr/lib/jvm/java-21-openjdk`: JDK 21 (via `pacman -S jdk21-openjdk`).
-  Gradle nutzt es zum Kompilieren.
+- `ANDROID_HOME` — `~/Android/Sdk`: Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle findet darüber alle SDK-Komponenten.
+- `JAVA_HOME` — `/usr/lib/jvm/java-21-openjdk`: JDK 21 (via `pacman -S jdk21-openjdk`). Gradle nutzt es zum Kompilieren.
 
 Dauerhaft in `~/.zshenv` setzen:
 
@@ -77,6 +75,7 @@ sdk.dir=/home/<user>/Android/Sdk
 Warten bis gebootet, dann App installieren und starten:
 
 `adb install app/build/outputs/apk/debug/app-debug.apk`
+
 `adb shell am start -n com.flowscale.app/.MainActivity`
 
 ## Physisches Gerät
