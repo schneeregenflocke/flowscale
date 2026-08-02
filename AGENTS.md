@@ -4,6 +4,8 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 
 ## Architektur
 
+### Stack
+
 - Native Android (Kotlin, Jetpack Compose)
 - AGP 9.1 mit Built-in Kotlin (kein separates `kotlin-android` Plugin)
 - Compose Compiler Plugin (`kotlin-compose`) wird separat angewendet
@@ -11,7 +13,9 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 - iOS-Portierung soll langfristig möglich bleiben (KMP als Option)
 - Min SDK 26, Target/Compile SDK 36
 
-## Voraussetzungen (Arch Linux)
+### Bauen
+
+### Voraussetzungen (Arch Linux)
 
 Alle Build-Abhängigkeiten lassen sich über `pacman` installieren:
 
@@ -35,7 +39,9 @@ AGP 9.x ist für JDK 17–21 freigegeben. JDK 26 (Arch-Default) scheitert beim `
 
 Das `kotlin`-Paket aus pacman ist **nicht nötig** — der Kotlin-Compiler ist im Gradle-Plugin eingebettet.
 
-## Umgebungsvariablen
+## Variablen
+
+### Umgebungsvariablen
 
 - `ANDROID_HOME` — `~/Android/Sdk`: Pfad zum Android SDK (Build-Tools, Plattformen, Emulator). Gradle findet darüber alle SDK-Komponenten.
 - `JAVA_HOME` — `/usr/lib/jvm/java-21-openjdk`: JDK 21 (via `pacman -S jdk21-openjdk`). Gradle nutzt es zum Kompilieren.
@@ -54,19 +60,23 @@ sdk.dir=/home/<user>/Android/Sdk
 
 ## Build
 
+### Bauen
+
 `./gradlew assembleDebug`
 
-## Tests
+### Tests
 
-### Unit-Tests (kein Gerät nötig)
+#### Unit-Tests (kein Gerät nötig)
 
 `./gradlew testDebugUnitTest`
 
-### Instrumentierungstests (Gerät/Emulator muss verbunden sein)
+#### Instrumentierungstests (Gerät/Emulator muss verbunden sein)
 
 `./gradlew connectedDebugAndroidTest`
 
-## Emulator starten
+## Betrieb
+
+### Emulator starten
 
 `QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd Flowscale -gpu auto &`
 
@@ -78,7 +88,7 @@ Warten bis gebootet, dann App installieren und starten:
 
 `adb shell am start -n com.flowscale.app/.MainActivity`
 
-## Physisches Gerät
+### Physisches Gerät
 
 1. USB-Debugging auf dem Android-Gerät aktivieren (Einstellungen → Über das Telefon → 7× auf Build-Nummer tippen → Entwickleroptionen → USB-Debugging)
 2. Gerät per USB verbinden
@@ -87,7 +97,9 @@ Warten bis gebootet, dann App installieren und starten:
 
 Bei `INSTALL_FAILED_UPDATE_INCOMPATIBLE` (anderer Signing-Key): erst `adb uninstall com.flowscale.app`, dann erneut installieren.
 
-## Datenbank inspizieren
+## Diagnose
+
+### Datenbank inspizieren
 
 Die App speichert Datenpunkte in einer Room/SQLite-Datenbank (`flowscale.db`) auf dem Gerät. Dateien auflisten:
 
@@ -106,7 +118,7 @@ sqlite3 /tmp/flowscale.db "SELECT * FROM intensity_records ORDER BY recordedAt A
 
 **Hinweis:** `adb install` bewahrt App-Daten (gleicher Signing-Key). Daten gehen nur bei `adb uninstall`, inkompatiblen Signaturen oder explizitem „Clear Data" verloren.
 
-## Screenshots per CLI (Hyprland + grim)
+### Screenshots per CLI (Hyprland + grim)
 
 Voraussetzungen: `grim` und `hyprctl` (Hyprland Compositor).
 
@@ -144,14 +156,14 @@ Screenshots im Projektverzeichnis unter `screenshots/` speichern — das Verzeic
 grim -g 'X,Y WxH' screenshots/emulator-screenshot.png
 ```
 
-## Roadmap
+## Offene Punkte
 
 Mögliche nächste Ziele (grobe Reihenfolge):
 
 1. **Export** — Daten als CSV/JSON exportieren
 2. **Einstellungen** — Schrittweite, Wertebereich, Sprache konfigurierbar machen
 
-## Konventionen
+## Entscheide
 
 - Sprache im Code und in Commits: Englisch
 - UI-Texte: Deutsch (Lokalisierung später)

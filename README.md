@@ -6,13 +6,15 @@
 
 Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).
 
-## Screenshots
+## Zweck
+
+### Screenshots
 
 <p align="center">
   <img src="docs/screenshots/main-screen.png" alt="Flowscale Hauptbildschirm mit Intensitätswert, Plus/Minus-Tasten, Einstellungen und Verlaufsgraph" width="320">
 </p>
 
-## Funktionen
+### Funktionen
 
 - Intensität per Plus/Minus-Tasten oder Lautstärkewippe erfassen
 - Verlaufs-Chart mit konfigurierbarem Zeitfenster (1–120 min)
@@ -51,7 +53,9 @@ Das APK liegt anschliessend unter `app/build/outputs/apk/debug/app-debug.apk`.
 ./gradlew connectedDebugAndroidTest  # Instrumentierungstests (Gerät/Emulator nötig)
 ```
 
-## Dependency-Lizenzen
+## Dokumentation
+
+### Dependency-Lizenzen
 
 Die vollständige Liste aller gebundelten Third-Party-Lizenzen wird vom [AboutLibraries](https://github.com/mikepenz/AboutLibraries)-Plugin generiert und ist in der App sichtbar unter:
 
@@ -63,7 +67,7 @@ Manueller Export der Definitionen:
 ./gradlew :app:exportLibraryDefinitions
 ```
 
-## Lizenz
+### Lizenz
 
 Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
 
