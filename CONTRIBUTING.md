@@ -1,38 +1,5 @@
 # Mitwirken an Flowscale
 
-## Build
-
-### Pre-Commit-Hooks
-
-Das Repo nutzt [pre-commit](https://pre-commit.com/) mit [gitleaks](https://github.com/gitleaks/gitleaks) und einer kleinen Auswahl aus [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks), um versehentlich committete Secrets und grosse Binärblobs abzufangen.
-
-Einmalige Einrichtung auf deiner Maschine:
-
-```sh
-pipx install pre-commit
-pre-commit install
-```
-
-Ab dann laufen die Hooks automatisch bei jedem `git commit`. Manuell über alle Dateien laufen lassen:
-
-```sh
-pre-commit run --all-files
-```
-
-Die aktiven Hooks sind in [.pre-commit-config.yaml](.pre-commit-config.yaml) gepinnt (keine `main`-Referenzen).
-
-### CI-Checks
-
-[.github/workflows/ci.yml](.github/workflows/ci.yml) läuft auf `push` nach `main` und auf jedem `pull_request` gegen `main`. Gebrochen wird der Build bei:
-
-- Lizenz-Allowlist (`:app:licenseeRelease`) — bricht bei einer Dependency mit
-  nicht-erlaubter oder fehlender SPDX-Lizenz
-- Lint (`:app:lintDebug`) — bricht bei einem Befund auf Error-Level
-- Unit-Tests (`:app:testDebugUnitTest`) — bricht bei einem Test-Failure
-- Debug-APK (`:app:assembleDebug`) — bricht bei Compile- oder Packaging-Fehlern
-
-Die erlaubten SPDX-Identifier sind im `licensee { }`-Block in [app/build.gradle.kts](app/build.gradle.kts) aufgeführt: `Apache-2.0`, `MIT`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `CC0-1.0`, `EPL-2.0`.
-
 ## Entscheide
 
 ### Versionierungs-Policy
@@ -60,3 +27,38 @@ Die Version wird nicht von Hand in `build.gradle.kts` eingetragen, sondern pro B
 ### SBOM
 
 Das SPDX-2.3-SBOM wird über `./gradlew :app:spdxSbomForRelease` erzeugt und liegt unter [build/reports/spdx/flowscale.spdx.json](build/reports/spdx/flowscale.spdx.json). Der Task ist bewusst nicht an `build` gehängt — er läuft nur manuell oder im Release-Workflow.
+
+## Betrieb
+
+### Build
+
+#### Pre-Commit-Hooks
+
+Das Repo nutzt [pre-commit](https://pre-commit.com/) mit [gitleaks](https://github.com/gitleaks/gitleaks) und einer kleinen Auswahl aus [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks), um versehentlich committete Secrets und grosse Binärblobs abzufangen.
+
+Einmalige Einrichtung auf deiner Maschine:
+
+```sh
+pipx install pre-commit
+pre-commit install
+```
+
+Ab dann laufen die Hooks automatisch bei jedem `git commit`. Manuell über alle Dateien laufen lassen:
+
+```sh
+pre-commit run --all-files
+```
+
+Die aktiven Hooks sind in [.pre-commit-config.yaml](.pre-commit-config.yaml) gepinnt (keine `main`-Referenzen).
+
+#### CI-Checks
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml) läuft auf `push` nach `main` und auf jedem `pull_request` gegen `main`. Gebrochen wird der Build bei:
+
+- Lizenz-Allowlist (`:app:licenseeRelease`) — bricht bei einer Dependency mit
+  nicht-erlaubter oder fehlender SPDX-Lizenz
+- Lint (`:app:lintDebug`) — bricht bei einem Befund auf Error-Level
+- Unit-Tests (`:app:testDebugUnitTest`) — bricht bei einem Test-Failure
+- Debug-APK (`:app:assembleDebug`) — bricht bei Compile- oder Packaging-Fehlern
+
+Die erlaubten SPDX-Identifier sind im `licensee { }`-Block in [app/build.gradle.kts](app/build.gradle.kts) aufgeführt: `Apache-2.0`, `MIT`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `CC0-1.0`, `EPL-2.0`.

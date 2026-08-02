@@ -22,9 +22,29 @@ Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als P
 - Option „Bildschirm immer an" für längere Messsitzungen
 - Lokale Speicherung in Room/SQLite, kein Netzwerkzugriff
 
-## Build
+#### Dependency-Lizenzen
 
-### Voraussetzungen
+Die vollständige Liste aller gebundelten Third-Party-Lizenzen wird vom [AboutLibraries](https://github.com/mikepenz/AboutLibraries)-Plugin generiert und ist in der App sichtbar unter:
+
+> Info-Button (unten rechts) → **Open-Source-Lizenzen**
+
+Manueller Export der Definitionen:
+
+```sh
+./gradlew :app:exportLibraryDefinitions
+```
+
+#### Lizenz
+
+Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
+
+Siehe auch [NOTICE](NOTICE) für Hinweise zu Drittanbieter-Lizenzen.
+
+## Betrieb
+
+### Build
+
+#### Voraussetzungen
 
 - JDK 17–21 — JDK 26 (Arch-Default) wird nicht unterstützt
 - Android SDK Platform 36 — Build-Tools passend zum SDK
@@ -38,7 +58,7 @@ export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 
 Das Android-SDK wird über `ANDROID_HOME` (z. B. `~/Android/Sdk`) und pro Host in `local.properties` (`sdk.dir=…`, ge-`.gitignore`d) konfiguriert.
 
-### Debug-APK bauen
+#### Debug-APK bauen
 
 ```sh
 ./gradlew assembleDebug
@@ -46,29 +66,9 @@ Das Android-SDK wird über `ANDROID_HOME` (z. B. `~/Android/Sdk`) und pro Host i
 
 Das APK liegt anschliessend unter `app/build/outputs/apk/debug/app-debug.apk`.
 
-### Tests
+#### Tests
 
 ```sh
 ./gradlew testDebugUnitTest          # Unit-Tests
 ./gradlew connectedDebugAndroidTest  # Instrumentierungstests (Gerät/Emulator nötig)
 ```
-
-## Dokumentation
-
-### Dependency-Lizenzen
-
-Die vollständige Liste aller gebundelten Third-Party-Lizenzen wird vom [AboutLibraries](https://github.com/mikepenz/AboutLibraries)-Plugin generiert und ist in der App sichtbar unter:
-
-> Info-Button (unten rechts) → **Open-Source-Lizenzen**
-
-Manueller Export der Definitionen:
-
-```sh
-./gradlew :app:exportLibraryDefinitions
-```
-
-### Lizenz
-
-Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
-
-Siehe auch [NOTICE](NOTICE) für Hinweise zu Drittanbieter-Lizenzen.
