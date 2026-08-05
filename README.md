@@ -2,73 +2,67 @@
 
 [![CI](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/schneeregenflocke/flowscale/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/github/license/schneeregenflocke/flowscale)](LICENSE)
 
-> **Hinweis:** Diese App wird per Vibe Coding entwickelt.
+> **Note:** this app gets developed by vibe coding.
 
-Android-App (APK): kontinuierliche, visuelle numerische Rating-Skala (NRS) als Patient-Reported Outcome Measure (PROM).
+An Android app (APK): a continuous, visual numeric rating scale (NRS) as a patient-reported outcome measure (PROM). Its interface is German.
 
-## Zweck
+## Purpose
 
 ### Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/main-screen.png" alt="Flowscale Hauptbildschirm mit Intensitätswert, Plus/Minus-Tasten, Einstellungen und Verlaufsgraph" width="320">
+  <img src="docs/screenshots/main-screen.png" alt="The Flowscale main screen with the intensity value, plus and minus buttons, settings and the history chart" width="320">
 </p>
 
-### Funktionen
+### Features
 
-- Intensität per Plus/Minus-Tasten oder Lautstärkewippe erfassen
-- Verlaufs-Chart mit konfigurierbarem Zeitfenster (1–120 min)
-- CSV-Export der gesammelten Datenpunkte
-- Option „Bildschirm immer an" für längere Messsitzungen
-- Lokale Speicherung in Room/SQLite, kein Netzwerkzugriff
+- Record the intensity through the plus and minus buttons or the volume rocker
+- A history chart with a configurable time window (1 to 120 min)
+- CSV export of the collected data points
+- The option "keep the screen on" for longer measuring sessions
+- Local storage in Room and SQLite, no network access
 
-#### Dependency-Lizenzen
+#### Dependency licences
 
-Die vollständige Liste aller gebundelten Third-Party-Lizenzen wird vom [AboutLibraries](https://github.com/mikepenz/AboutLibraries)-Plugin generiert und ist in der App sichtbar unter:
-
-> Info-Button (unten rechts) → **Open-Source-Lizenzen**
-
-Manueller Export der Definitionen:
+The [AboutLibraries](https://github.com/mikepenz/AboutLibraries) plugin generates the full list of every bundled third-party licence, and the app shows it under the info button (bottom right) → **Open-Source-Lizenzen**. Export the definitions by hand:
 
 ```sh
 ./gradlew :app:exportLibraryDefinitions
 ```
 
-#### Lizenz
+#### Licence
 
-Flowscale steht unter der [MIT-Lizenz](LICENSE) — Copyright © 2026 Marco Peyer.
+Flowscale stands under the [MIT licence](LICENSE) — copyright © 2026 Marco Peyer. See [NOTICE](NOTICE) for the third-party licences.
 
-Siehe auch [NOTICE](NOTICE) für Hinweise zu Drittanbieter-Lizenzen.
-
-## Betrieb
+## Operations
 
 ### Build
 
-#### Voraussetzungen
+#### Prerequisites
 
-- JDK 17–21 — JDK 26 (Arch-Default) wird nicht unterstützt
-- Android SDK Platform 36 — Build-Tools passend zum SDK
-- Gradle-Wrapper — mitgeliefert, `./gradlew`
+- JDK 17 to 21 — JDK 26 (the Arch default) is unsupported
+- Android SDK platform 36, build tools matching the SDK
+- The Gradle wrapper — shipped along, `./gradlew`
 
-Android Gradle Plugin 9.1 ist für JDK 17–21 freigegeben. Setze `JAVA_HOME` entsprechend:
+Android Gradle Plugin 9.1 is released for JDK 17 to 21. Set `JAVA_HOME` accordingly:
 
 ```sh
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 ```
 
-Das Android-SDK wird über `ANDROID_HOME` (z. B. `~/Android/Sdk`) und pro Host in `local.properties` (`sdk.dir=…`, ge-`.gitignore`d) konfiguriert.
+The Android SDK gets configured through `ANDROID_HOME` (`~/Android/Sdk` for instance) and per host in `local.properties` (`sdk.dir=…`, gitignored).
 
-#### Debug-APK bauen
+#### Building the debug APK
 
 ```sh
 ./gradlew assembleDebug
 ```
 
-Das APK liegt anschliessend unter `app/build/outputs/apk/debug/app-debug.apk`.
+The APK then sits under `app/build/outputs/apk/debug/app-debug.apk`.
 
 #### Tests
 
 ```sh
-./gradlew testDebugUnitTest          # Unit-Tests
-./gradlew connectedDebugAndroidTest  # Instrumentierungstests (Gerät/Emulator nötig)
+./gradlew testDebugUnitTest          # unit tests
+./gradlew connectedDebugAndroidTest  # instrumentation tests (a device or emulator is needed)
 ```

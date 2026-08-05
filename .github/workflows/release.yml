@@ -95,7 +95,7 @@ jobs:
           body: |
             Automated release for ${{ steps.bump.outputs.tag }}.
 
-            **APK ist unsigniert**, Signierung folgt in einem späteren Release.
+            **The APK is unsigned**; signing follows in a later release.
 
             Assets:
             - `flowscale-${{ steps.bump.outputs.tag }}-unsigned.apk`
